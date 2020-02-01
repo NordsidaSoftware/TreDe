@@ -43,12 +43,13 @@
   <ItemGroup>
     <Compile Include="Actor.cs" />
     <Compile Include="Component.cs" />
+    <Compile Include="FPS.cs" />
     <Compile Include="MapReader.cs" />
     <Compile Include="MapToStructures.cs" />
     <Compile Include="PhysEngine.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="PlayState.cs" />
-    <Compile Include="fPoint.cs" />
+    <Compile Include="CustomTypes.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="InputHandler.cs" />
     <Compile Include="Program.cs" />

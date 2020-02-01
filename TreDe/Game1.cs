@@ -16,7 +16,8 @@ namespace TreDe
         Renderer renderer;
 
         public Settings settings;
-            
+        FPS fps;
+
 
         public Game1()
         {
@@ -32,6 +33,7 @@ namespace TreDe
         /// </summary>
         protected override void Initialize()
         {
+            fps = new FPS(this);
             settings = new Settings()
             {
                 TileSize = 20
@@ -98,6 +100,7 @@ namespace TreDe
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            fps.Draw(gameTime);
             GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin();

@@ -106,57 +106,13 @@ namespace TreDe
             {
                 MoveCamera(0, 1);
             }
-
-
-            /*
-            if (!Scrolling)
-            {
-                if (renderTarget.player.position.X - renderTarget.CameraPosition.X < CenterRect.X)
-                {
-                    Scrolling = true;
-                    ScrollDir = new Point(-1, 0);
-                }
-                if (renderTarget.player.position.X - renderTarget.CameraPosition.X > CenterRect.Width + CenterRect.X)
-                {
-                    Scrolling = true;
-                    ScrollDir = new Point(1, 0);
-                }
-
-                if (renderTarget.player.position.Y - renderTarget.CameraPosition.Y < CenterRect.Y)
-                {
-                    Scrolling = true;
-                    ScrollDir = new Point(0, -1);
-                }
-                if (renderTarget.player.position.Y - renderTarget.CameraPosition.Y > CenterRect.Height + CenterRect.Y)
-                {
-                    Scrolling = true;
-                    ScrollDir = new Point(0, 1);
-                }
-
-            }
-
-
-            if (Scrolling)
-            {
-                MoveCamera(ScrollDir.X, ScrollDir.Y);
-                tellerTest++;
-                if (tellerTest > 10)
-                {
-                    Scrolling = false;
-                    ScrollDir = Point.Zero;
-                }
-                
-            }
-
-    */
-
         }
 
             public void Draw(SpriteBatch spriteBatch)
         {
             float TopX, TopY, perspectiveX, perspectiveY;
             int strX_offset, strY_offset;
-            char[] structure = new char[8];
+            Tile[] structure = new Tile[8];
 
             for (int x = 0; x < ScreenTilesX; x++)
             {
@@ -175,16 +131,22 @@ namespace TreDe
                     
                     for ( int i = 0; i < Levels; i++)
                     {
-                        structure[i] = (char)renderTarget.Grid[tileX, tileY, i];
+                        if (!renderTarget.PhysE.WaterGrid[tileX, tileY, i])
+                        structure[i] = ConvertFromByteToTiles.MapByteToTile[renderTarget.Grid[tileX, tileY, i]];
+                        else
+                        {
+                            structure[i] = ConvertFromByteToTiles.Water;
+                        }
                     }
 
                     Rectangle r = new Rectangle(x * TileSize, y * TileSize, TileSize, TileSize);
 
-                    for (int layer = 0; layer < structure.Length; layer++)
+                    for (int layer = 0; layer < 8; layer++)
                     {
-                        if (structure[layer] == (byte)TileType.Empty) { continue; }
-                        strX_offset = structure[layer] % TextureTiles * TextureTileSize;
-                        strY_offset = structure[layer] / TextureTiles * TextureTileSize;
+                        if (structure[layer].Equals(ConvertFromByteToTiles.Empty)) { continue; }
+
+                        strX_offset = structure[layer].charPart % TextureTiles * TextureTileSize;
+                        strY_offset = structure[layer].charPart / TextureTiles * TextureTileSize;
 
                         perspectiveX = TopX / Levels;
                         perspectiveY = TopY / Levels;
@@ -192,7 +154,10 @@ namespace TreDe
 
                         spriteBatch.Draw(texture, r,
                                          new Rectangle(strX_offset, strY_offset, TextureTileSize, TextureTileSize),
-                                         new Color((layer+1) * 50, (layer+1) * 50, 100));
+
+                                         new Color(structure[layer].color, (1.0f-layer/8.0f) ));
+                                           
+                        
 
                     }
                 }

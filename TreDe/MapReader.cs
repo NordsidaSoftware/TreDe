@@ -3,7 +3,7 @@ using System;
 
 namespace TreDe
 {
-    public enum TileType { Empty, Wall, Door, Tree, Water }
+  
     internal class MapReader
     {
         private int worldWidth;
@@ -29,35 +29,42 @@ namespace TreDe
                 {
                     for (int z = 0; z < worldDepth; z++ )
                     Map[x, y, z] = (byte)TileType.Empty;
-
                 }
             }
+            
            for (int i = 0; i < (worldHeight * worldWidth)/100; i++)
             {
                 var randX = rnd.Next(0, worldWidth);
                 var randY = rnd.Next(0, worldHeight);
-                SetupStructureInGrid(randX, randY, TileType.Tree);
+                for ( int z = 0; z < 7;z++)
+                    Map[randX, randY, z] = (byte)TileType.Tree;
+                Map[randX, randY, 7] = (byte)TileType.Crown;
            
             }
+            
 
             Rectangle house = new Rectangle(10, 10, 10, 10);
             foreach (Point p in RectangleExtension.Walls(house))
             {
-                SetupStructureInGrid(p.X, p.Y, TileType.Wall);
+                for (int z = 0; z < 8; z++)
+                    Map[p.X, p.Y, z] = (byte)TileType.Wall;
             }
-            SetupStructureInGrid(15, 10, TileType.Door);
+
+            //SetupStructureInGrid(15, 10, TileType.Door);
 
             return Map;
         }
 
-        private void SetupStructureInGrid(int randX, int randY, TileType structure)
+        /*
+        private void SetupStructureInGrid(int X, int Y, TileType structure)
         {
-            var struc = MapToStructures.MapToStructure[(byte)structure];
+            var struc = ConvertFromByteToTiles.MapByteToStructure[(byte)structure];
 
-            for (int z = 0; z < struc.charParts.Length; z++)
+            for (int z = 0; z < struc.tiles.Length; z++)
             {
-                Map[randX, randY, z] = (byte)struc.charParts[z];
+                Map[X, Y, z] = (byte)struc.tiles[z];
             }
         }
+        */
     }
 }

@@ -29,18 +29,13 @@ namespace TreDe
         {
             player.Draw(spriteBatch);
 
-            // ========= water test here: ===========
-            Grid = PhysE.Draw(Grid);
-
-
             // draw agents and world here. The renderer will
             // take the grid ( by IRenderable interface ) and draw to the screen.
         }
 
         internal bool IsOccupied(int x, int y, int z)
         {
-            if (Grid[x,y, z] == 0) { return false; }
-            return true;
+            return ConvertFromByteToTiles.MapByteToTile[Grid[x, y, z]].blocked;
         }
 
 
@@ -94,7 +89,7 @@ namespace TreDe
             if (input.WasKeyPressed(Keys.Left)) { player.Move(-1, 0); }
             if (input.WasKeyPressed(Keys.Right)) { player.Move(1, 0); }
 
-            if (input.WasKeyPressed(Keys.Space)) { PhysE.AddWater(3, 3, 1); }
+            if (input.WasKeyPressed(Keys.Space)) { PhysE.AddWaterTop(player.position.X + 3, player.position.Y); }
 
             PhysE.Update(gameTime);
         }
