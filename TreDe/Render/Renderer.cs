@@ -25,9 +25,9 @@ namespace TreDe
 
 
         private PlayState renderTarget;
-        
 
-        public Renderer(StateManager Manager, IRenderable renderTarget,  Settings settings)
+
+        public Renderer(StateManager Manager, IRenderable renderTarget, Settings settings)
         {
             Vector2 Screen;
             texture = Manager.Game.Content.Load<Texture2D>("cp437T");
@@ -40,14 +40,14 @@ namespace TreDe
             this.renderTarget = (PlayState)renderTarget;
             Screen = new Vector2(Manager.Game.GraphicsDevice.Viewport.Width,
                                   Manager.Game.GraphicsDevice.Viewport.Height);
-            TilesWidth = this.renderTarget.Grid.GetLength(0);
-            TilesHeight = this.renderTarget.Grid.GetLength(1);
+            TilesWidth = this.renderTarget.Terrain.GetLength(0);
+            TilesHeight = this.renderTarget.Terrain.GetLength(1);
 
             Origin = Vector2.Zero;
 
             ScreenTilesX = (int)Screen.X / TileSize;
             ScreenTilesY = (int)Screen.Y / TileSize;
-            
+
 
             // Precalculate the scale offset for each grid on the screen
             // ===========================================================
@@ -79,89 +79,112 @@ namespace TreDe
 
             Origin.X += dx * TileSize;
             Origin.Y += dy * TileSize;
-           
-           renderTarget.CameraPosition.X = (Origin.X/TileSize);
-           renderTarget.CameraPosition.Y = (Origin.Y/TileSize);
+
+            renderTarget.CameraPosition.X = (Origin.X / TileSize);
+            renderTarget.CameraPosition.Y = (Origin.Y / TileSize);
 
         }
 
         internal void Update()
         {
-            if (renderTarget.player.position.X - renderTarget.CameraPosition.X > ScreenTilesX-10)
+            if (renderTarget.GOmanager.player.position.X - renderTarget.CameraPosition.X > ScreenTilesX - 10)
             {
                 MoveCamera(1, 0);
             }
 
-            if (renderTarget.player.position.X - renderTarget.CameraPosition.X < 10)
+            if (renderTarget.GOmanager.player.position.X - renderTarget.CameraPosition.X < 10)
             {
                 MoveCamera(-1, 0);
             }
 
-            if (renderTarget.player.position.Y - renderTarget.CameraPosition.Y < 5)
+            if (renderTarget.GOmanager.player.position.Y - renderTarget.CameraPosition.Y < 5)
             {
                 MoveCamera(0, -1);
             }
 
-            if (renderTarget.player.position.Y - renderTarget.CameraPosition.Y > ScreenTilesY - 5)
+            if (renderTarget.GOmanager.player.position.Y - renderTarget.CameraPosition.Y > ScreenTilesY - 5)
             {
                 MoveCamera(0, 1);
             }
         }
 
-            public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch)
         {
             float TopX, TopY, perspectiveX, perspectiveY;
             int strX_offset, strY_offset;
+
+            // DRAW TERRAIN //
+
             Tile[] structure = new Tile[8];
 
             for (int x = 0; x < ScreenTilesX; x++)
             {
                 for (int y = 0; y < ScreenTilesY; y++)
                 {
-                    var tileX = x + ((int)Origin.X /TileSize);
-                    var tileY = y + ((int)Origin.Y /TileSize);
+                    var tileX = x + ((int)Origin.X / TileSize);
+                    var tileY = y + ((int)Origin.Y / TileSize);
                     if (tileX < 0 || tileY < 0) { continue; }
                     if (tileX >= TilesWidth || tileY >= TilesHeight) { continue; }
-                
+
 
                     TopX = ScaledPoints[x, y].X;
                     TopY = ScaledPoints[x, y].Y;
 
 
-                    
-                    for ( int i = 0; i < Levels; i++)
+                    for (int i = 0; i < Levels; i++)
                     {
-                        if (!renderTarget.PhysE.WaterGrid[tileX, tileY, i])
-                        structure[i] = ConvertFromByteToTiles.MapByteToTile[renderTarget.Grid[tileX, tileY, i]];
-                        else
-                        {
-                            structure[i] = ConvertFromByteToTiles.Water;
-                        }
+                        structure[i] = ConvertFromByteToTiles.MapByteToTile[renderTarget.Terrain[tileX, tileY, i]];
                     }
+
+
 
                     Rectangle r = new Rectangle(x * TileSize, y * TileSize, TileSize, TileSize);
 
-                    for (int layer = 0; layer < 8; layer++)
+                    for (int z = 0; z < 8; z++)
                     {
-                        if (structure[layer].Equals(ConvertFromByteToTiles.Empty)) { continue; }
-
-                        strX_offset = structure[layer].charPart % TextureTiles * TextureTileSize;
-                        strY_offset = structure[layer].charPart / TextureTiles * TextureTileSize;
+                    
+                        strX_offset = structure[z].charPart % TextureTiles * TextureTileSize;
+                        strY_offset = structure[z].charPart / TextureTiles * TextureTileSize;
 
                         perspectiveX = TopX / Levels;
                         perspectiveY = TopY / Levels;
-                        r.Offset(perspectiveX * layer, perspectiveY * layer);
+                        r.Offset(perspectiveX * z, perspectiveY * z);
 
+                        
                         spriteBatch.Draw(texture, r,
                                          new Rectangle(strX_offset, strY_offset, TextureTileSize, TextureTileSize),
 
-                                         new Color(structure[layer].color, (1.0f-layer/8.0f) ));
-                                           
-                        
+                                         new Color(structure[z].color, (1.0f - z / 8.0f)));
+
+
+                        GameObject GO = renderTarget.GOmanager.getGOAt(tileX, tileY, z);
+                        if (GO != null)
+                        {
+                            strX_offset = GO.Glyph % TextureTiles * TextureTileSize;
+                            strY_offset = GO.Glyph / TextureTiles * TextureTileSize;
+
+                            spriteBatch.Draw(texture, r,
+                                         new Rectangle(strX_offset, strY_offset, TextureTileSize, TextureTileSize),
+
+                                         new Color(GO.color, (1.0f - z / 8.0f)));
+                        }
+
+                        if (renderTarget.PhysE.WaterGrid[tileX, tileY, z])
+                        {
+                            strX_offset = 219 % TextureTiles * TextureTileSize;
+                            strY_offset = 219 / TextureTiles * TextureTileSize;
+
+                            spriteBatch.Draw(texture, r,
+                                         new Rectangle(strX_offset, strY_offset, TextureTileSize, TextureTileSize),
+
+                                         new Color(Color.LightBlue, (1.0f - z / 8.0f)));
+                        }
 
                     }
                 }
             }
+
+         
         }
     }
 }

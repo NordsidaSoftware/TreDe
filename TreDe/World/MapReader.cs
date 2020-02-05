@@ -27,8 +27,13 @@ namespace TreDe
             {
                 for (int y = 0; y < worldHeight; y++)
                 {
-                    for (int z = 0; z < worldDepth; z++ )
-                    Map[x, y, z] = (byte)TileType.Empty;
+                    for (int z = 0; z < worldDepth; z++)
+                    {
+                        if (z == 0)
+                            Map[x, y, z] = (byte)TileType.Grass;
+                        else
+                            Map[x, y, z] = (byte)TileType.Empty;
+                    }
                 }
             }
             
@@ -36,35 +41,35 @@ namespace TreDe
             {
                 var randX = rnd.Next(0, worldWidth);
                 var randY = rnd.Next(0, worldHeight);
-                for ( int z = 0; z < 7;z++)
-                    Map[randX, randY, z] = (byte)TileType.Tree;
-                Map[randX, randY, 7] = (byte)TileType.Crown;
+
+                AddStructure(randX, randY, "Tree");
+               
            
             }
             
 
             Rectangle house = new Rectangle(10, 10, 10, 10);
             foreach (Point p in RectangleExtension.Walls(house))
-            {
-                for (int z = 0; z < 8; z++)
-                    Map[p.X, p.Y, z] = (byte)TileType.Wall;
-            }
+                AddStructure(p.X, p.Y, "HouseWall");
 
-            //SetupStructureInGrid(15, 10, TileType.Door);
+            foreach (Point p in RectangleExtension.Area(house))
+                Map[p.X, p.Y, 0] = (byte)TileType.Empty;
+
+            AddStructure(15, 20, "Door");
 
             return Map;
         }
 
-        /*
-        private void SetupStructureInGrid(int X, int Y, TileType structure)
+        private void AddStructure(int x, int y, string structureAsString)
         {
-            var struc = ConvertFromByteToTiles.MapByteToStructure[(byte)structure];
-
-            for (int z = 0; z < struc.tiles.Length; z++)
+            if (ConvertFromByteToTiles.StructureDictionary.ContainsKey(structureAsString))
             {
-                Map[X, Y, z] = (byte)struc.tiles[z];
+                Structure s = ConvertFromByteToTiles.StructureDictionary[structureAsString];
+                for ( int layer = 0; layer < s.tiles.Length; layer++)
+                {
+                    Map[x, y, layer] = (byte)s.tiles[layer];
+                }
             }
         }
-        */
     }
 }

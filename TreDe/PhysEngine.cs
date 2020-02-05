@@ -8,21 +8,23 @@ namespace TreDe
     public class PhysEngine
     {
         private PlayState playState;
-        int Width, Height;
+        int Width, Height, Depth;
 
         public bool[,,] WaterGrid;
-        public bool[,] WaterGridNeedUpdate, old_WaterGridNeedUpdate;
+        public bool[,] WaterGridNeedUpdate;
         private bool WaterIsStatic;
 
         Random rnd;
 
         public PhysEngine(PlayState playState)
         {
+            Settings s = (Settings)playState.Manager.Game.Services.GetService(typeof(ISettings));
             this.playState = playState;
-            this.Width = playState.Grid.GetLength(0);
-            this.Height = playState.Grid.GetLength(1);
-            WaterGrid = new bool[Width, Height, 8];
-            WaterGridNeedUpdate = old_WaterGridNeedUpdate = new bool[Width, Height];
+            this.Width = s.WorldWidth;
+            this.Height = s.WorldHeight;
+            this.Depth = s.WorldDepth;
+            WaterGrid = new bool[Width, Height, Depth];
+            WaterGridNeedUpdate = new bool[Width, Height];
             rnd = new Random();
         }
 
@@ -31,6 +33,7 @@ namespace TreDe
         {
             WaterGrid[x, y, 7] = true;
             WaterGridNeedUpdate[x, y] = true;
+            WaterIsStatic = false;
         }
 
         public void AddWater(int x, int y, int amount)
@@ -42,6 +45,7 @@ namespace TreDe
                 WaterGrid[x, y, z] = true;
             }
             WaterGridNeedUpdate[x, y] = true;
+            WaterIsStatic = false;
         }
 
         private byte GetWaterLevelAt(int x, int y)
@@ -59,6 +63,11 @@ namespace TreDe
 
         private void WaterSimulation()
         {
+
+            // OK: Need moore speed. Bottleneck is the flood fill algorithm that will search ALL
+            // levels below for empty cell. Need some sort of static flag in z dimension.
+
+            int updates = 0;
             for (int x = 0; x < Width; x++)
             {
                 for (int y = 0; y < Height; y++)
@@ -72,24 +81,29 @@ namespace TreDe
                             {
                                 WaterGrid[x, y, z + 1] = false;
                                 WaterGrid[x, y, z] = true;
+                                updates++;
                             }
 
                             // Flow Laterally
-                            if (WaterGrid[x, y, z + 1] && WaterGrid[x, y, z])
+                            else if (WaterGrid[x, y, z + 1] && WaterGrid[x, y, z])
                             {
                                 Point3 tile = SearchAndRetrieveEmptyTile(x, y, z);
                                 if (tile.X > 0)
                                 {
                                     WaterGrid[x, y, z + 1] = false;
                                     WaterGrid[tile.X, tile.Y, tile.Z] = true;
+                                    WaterGridNeedUpdate[tile.X, tile.Y] = true;
+                                    updates++;
                                 }
                             }
+
                         }
+                           
                     }
                 }
             }
 
-            old_WaterGridNeedUpdate = WaterGridNeedUpdate;
+            if ( updates == 0) { WaterIsStatic = true; }
             
         }
 

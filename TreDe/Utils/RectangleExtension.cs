@@ -35,9 +35,9 @@ namespace TreDe
         {
             List<Point> Points = new List<Point>();
 
-            for (int x = rect.Left; x < rect.Right; x++)
+            for (int x = rect.Left+1; x < rect.Right; x++)
             {
-                for (int y = rect.Top; y < rect.Bottom; y++)
+                for (int y = rect.Top+1; y < rect.Bottom; y++)
                 {
                     Points.Add(new Point(x, y));
                 }

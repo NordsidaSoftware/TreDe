@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TreDe
 {
-    public enum TileType { Empty, Wall, Door, Tree, Crown, Water }
+    public enum TileType:byte { Empty, Grass, Wall, Door, Tree, Crown, Water }
     public struct Tile
     {
         public char charPart;
@@ -29,6 +29,13 @@ namespace TreDe
             charPart = ' ',
             blocked = false,
             color = Color.Transparent
+        };
+
+        public static Tile Grass = new Tile()
+        {
+            charPart = '.',
+            blocked = false,
+            color = Color.Green
         };
 
 
@@ -65,13 +72,31 @@ namespace TreDe
     
         public static Dictionary<byte, Tile> MapByteToTile = new Dictionary<byte, Tile>()
         {
-            {(byte)TileType.Empty, Empty },   
+            {(byte)TileType.Empty, Empty },
+            {(byte)TileType.Grass, Grass },
             {(byte)TileType.Water, Water },
-            {(byte)TileType.Wall, Wall },
-             {(byte)TileType.Crown, Crown },
-            {(byte)TileType.Tree, Tree },
+            {(byte)TileType.Wall,  Wall  },
+            {(byte)TileType.Crown, Crown },
+            {(byte)TileType.Tree,  Tree  },
+         
         };
 
+
+        public static Dictionary<string, Structure> StructureDictionary = new Dictionary<string, Structure>()
+        {
+            {"Tree", new Structure(){tiles = new TileType[]{TileType.Tree, TileType.Tree,
+            TileType.Tree, TileType.Tree, TileType.Tree, TileType.Tree, TileType.Tree,
+            TileType.Crown} } },
+
+            {"HouseWall", new Structure(){tiles = new TileType[]{TileType.Wall, TileType.Wall,
+            TileType.Wall, TileType.Wall, TileType.Wall, TileType.Wall, TileType.Wall,
+            TileType.Wall} } },
+
+             {"Door", new Structure(){tiles = new TileType[]{TileType.Empty, TileType.Empty,
+            TileType.Empty, TileType.Empty, TileType.Empty, TileType.Empty, TileType.Empty,
+            TileType.Wall} } },
+
+        };
       
       
     }
