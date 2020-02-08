@@ -21,32 +21,46 @@ namespace TreDe
         public Vector2 Origin;
 
         public fPoint[,] ScaledPoints; // precalculated scaled points
-        public int Levels;
+        public int TilesDepth;
 
 
         private PlayState renderTarget;
 
+        private Display LowerTextDisplay;
 
-        public Renderer(StateManager Manager, IRenderable renderTarget, Settings settings)
+        
+        public Renderer(StateManager Manager, IRenderable renderTarget)
         {
-            Vector2 Screen;
+            Settings s = (Settings)Manager.Game.Services.GetService(typeof(ISettings));
             texture = Manager.Game.Content.Load<Texture2D>("cp437T");
-            this.TileSize = settings.TileSize;
+
+            Point TileScreen;
+            TileSize = s.TileSize;
             TextureTiles = 16;
             TextureTileSize = 10;
             TopScale = 1.2f;
-            Levels = 8;
 
             this.renderTarget = (PlayState)renderTarget;
-            Screen = new Vector2(Manager.Game.GraphicsDevice.Viewport.Width,
-                                  Manager.Game.GraphicsDevice.Viewport.Height);
-            TilesWidth = this.renderTarget.Terrain.GetLength(0);
-            TilesHeight = this.renderTarget.Terrain.GetLength(1);
+            this.renderTarget.HappeningEvent += Test;
+            TileScreen = new Point(Manager.Game.GraphicsDevice.Viewport.Width,
+                                  Manager.Game.GraphicsDevice.Viewport.Height-250);
+
+            TilesWidth = s.WorldWidth;
+            TilesHeight = s.WorldHeight;
+            TilesDepth = s.WorldDepth;
 
             Origin = Vector2.Zero;
 
-            ScreenTilesX = (int)Screen.X / TileSize;
-            ScreenTilesY = (int)Screen.Y / TileSize;
+            ScreenTilesX = TileScreen.X / TileSize;
+            ScreenTilesY = TileScreen.Y / TileSize;
+
+            LowerTextDisplay = new Display(0, 
+                Manager.Game.GraphicsDevice.Viewport.Height - 250, 
+                Manager.Game.GraphicsDevice.Viewport.Width,
+                250, this);
+
+         
+            
 
 
             // Precalculate the scale offset for each grid on the screen
@@ -68,6 +82,11 @@ namespace TreDe
             }
 
             // =======================================================
+        }
+
+        private void Test(object sender, HappeningArgs e)
+        {
+            LowerTextDisplay.SetMessage(e.text);
         }
 
         internal void MoveCamera(int dx, int dy)
@@ -131,7 +150,7 @@ namespace TreDe
                     TopY = ScaledPoints[x, y].Y;
 
 
-                    for (int i = 0; i < Levels; i++)
+                    for (int i = 0; i < TilesDepth; i++)
                     {
                         structure[i] = ConvertFromByteToTiles.MapByteToTile[renderTarget.Terrain[tileX, tileY, i]];
                     }
@@ -140,14 +159,14 @@ namespace TreDe
 
                     Rectangle r = new Rectangle(x * TileSize, y * TileSize, TileSize, TileSize);
 
-                    for (int z = 0; z < 8; z++)
+                    for (int z = 0; z < TilesDepth; z++)
                     {
                     
                         strX_offset = structure[z].charPart % TextureTiles * TextureTileSize;
                         strY_offset = structure[z].charPart / TextureTiles * TextureTileSize;
 
-                        perspectiveX = TopX / Levels;
-                        perspectiveY = TopY / Levels;
+                        perspectiveX = TopX / TilesDepth;
+                        perspectiveY = TopY / TilesDepth;
                         r.Offset(perspectiveX * z, perspectiveY * z);
 
                         
@@ -157,17 +176,6 @@ namespace TreDe
                                          new Color(structure[z].color, (1.0f - z / 8.0f)));
 
 
-                        GameObject GO = renderTarget.GOmanager.getGOAt(tileX, tileY, z);
-                        if (GO != null)
-                        {
-                            strX_offset = GO.Glyph % TextureTiles * TextureTileSize;
-                            strY_offset = GO.Glyph / TextureTiles * TextureTileSize;
-
-                            spriteBatch.Draw(texture, r,
-                                         new Rectangle(strX_offset, strY_offset, TextureTileSize, TextureTileSize),
-
-                                         new Color(GO.color, (1.0f - z / 8.0f)));
-                        }
 
                         if (renderTarget.PhysE.WaterGrid[tileX, tileY, z])
                         {
@@ -180,11 +188,23 @@ namespace TreDe
                                          new Color(Color.LightBlue, (1.0f - z / 8.0f)));
                         }
 
+                        GameObject GO = renderTarget.GOmanager.getGOAt(tileX, tileY, z);
+                        if (GO != null)
+                        {
+                            strX_offset = GO.Glyph % TextureTiles * TextureTileSize;
+                            strY_offset = GO.Glyph / TextureTiles * TextureTileSize;
+
+                            spriteBatch.Draw(texture, r,
+                                         new Rectangle(strX_offset, strY_offset, TextureTileSize, TextureTileSize),
+
+                                         new Color(GO.color, (1.0f - z / 8.0f)));
+                        }
                     }
                 }
             }
 
-         
+
+            LowerTextDisplay.Draw(spriteBatch);
         }
     }
 }

@@ -29,6 +29,12 @@ namespace TreDe
                     position.Y += dy;
                 }
             }
+
+            // TEST EVENT DRIVEN MESSAGE TO RENDERER :
+            GOmanager.playState.RaiseHappeingEvent(new HappeningArgs(TypeOfComponent.TEST, "TEST"));
+                
+
+            // =============================
             // if (state.GetGameObjectAt(position.X, position.Y, position.Z) != null) { }
         }
 

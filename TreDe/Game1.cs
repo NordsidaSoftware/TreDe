@@ -23,6 +23,8 @@ namespace TreDe
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height - 150 ;
+            graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2; ;
         }
 
         /// <summary>
@@ -33,11 +35,10 @@ namespace TreDe
         /// </summary>
         protected override void Initialize()
         {
+
             fps = new FPS(this);
-            settings = new Settings()
-            {
-                TileSize = 20
-            };
+            settings = new Settings();
+          
 
             Services.AddService(typeof(ISettings), settings);
                 
@@ -52,7 +53,8 @@ namespace TreDe
             PlayState ps = new PlayState();
             stateManager.Push(ps);
 
-            renderer = new Renderer(stateManager, ps, settings);
+            renderer = new Renderer(stateManager, ps);
+
 
             base.Initialize();
         }

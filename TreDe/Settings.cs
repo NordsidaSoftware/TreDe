@@ -5,7 +5,7 @@
     {
         public int WorldWidth, WorldHeight, WorldDepth;
         public int TileSize;
-        public Settings(int TileSize = 10, int WorldWidth = 800, int WorldHeight = 400, 
+        public Settings(int TileSize = 20, int WorldWidth = 800, int WorldHeight = 400, 
             int WorldDepth = 8)
         {
             this.TileSize = TileSize;
