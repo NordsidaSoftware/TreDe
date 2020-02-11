@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -86,7 +87,7 @@ namespace TreDe
 
         private void Test(object sender, HappeningArgs e)
         {
-            LowerTextDisplay.SetMessage(e.text);
+            LowerTextDisplay.WriteLine(e.text, Color.Blue) ;
         }
 
         internal void MoveCamera(int dx, int dy)
@@ -152,7 +153,7 @@ namespace TreDe
 
                     for (int i = 0; i < TilesDepth; i++)
                     {
-                        structure[i] = ConvertFromByteToTiles.MapByteToTile[renderTarget.Terrain[tileX, tileY, i]];
+                        structure[i] = TileManager.MapByteToTile[renderTarget.Terrain[tileX, tileY, i]];
                     }
 
 
@@ -187,8 +188,22 @@ namespace TreDe
 
                                          new Color(Color.LightBlue, (1.0f - z / 8.0f)));
                         }
+                        List<Item> items = renderTarget.GOmanager.GetItemsAt(tileX, tileY, z);
+                        if ( items.Count > 0)
+                        {
+                            foreach (Item i in items)
+                            {
+                                strX_offset = i.Glyph % TextureTiles * TextureTileSize;
+                                strY_offset = i.Glyph / TextureTiles * TextureTileSize;
 
-                        GameObject GO = renderTarget.GOmanager.getGOAt(tileX, tileY, z);
+                                spriteBatch.Draw(texture, r,
+                                             new Rectangle(strX_offset, strY_offset, TextureTileSize, TextureTileSize),
+
+                                             new Color(i.color, (1.0f - z / 8.0f)));
+                            }
+                        }
+
+                        GameObject GO = renderTarget.GOmanager.GetActorAt(tileX, tileY, z);
                         if (GO != null)
                         {
                             strX_offset = GO.Glyph % TextureTiles * TextureTileSize;

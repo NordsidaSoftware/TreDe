@@ -26,8 +26,23 @@ namespace TreDe
             WaterGrid = new bool[Width, Height, Depth];
             WaterGridNeedUpdate = new bool[Width, Height];
             rnd = new Random();
+            playState.HappeningEvent += OnTerrainChange;
         }
 
+        private void OnTerrainChange(object sender, HappeningArgs e)
+        {
+            if (e.requires == TypeOfComponent.PHYSIC)
+            {
+                WaterIsStatic = false;
+                for ( int x = 0; x < Width; x++)
+                {
+                    for (int y = 0; y < Height; y++)
+                    {
+                        WaterGridNeedUpdate[x, y] = true;
+                    }
+                }
+            }
+        }
 
         public void AddWaterTop(int x, int y)
         {
@@ -103,7 +118,17 @@ namespace TreDe
                 }
             }
 
-            if ( updates == 0) { WaterIsStatic = true; }
+            if ( updates == 0) {
+
+                WaterIsStatic = true;
+                for (int x = 0; x < Width; x++)
+                {
+                    for (int y = 0; y < Height; y++)
+                    {
+                        WaterGridNeedUpdate[x, y] = false;
+                    }
+                }
+            }
             
         }
 
@@ -128,7 +153,7 @@ namespace TreDe
 
                     foreach (Point p in GetNeighbors(current.X, current.Y))
                     {
-                        if (playState.IsOccupied(p.X, p.Y, level)) { continue; }
+                        if (playState.IsBlocked(p.X, p.Y, level)) { continue; }
 
                         if (!Came_From.ContainsKey(p)) { Came_From[p] = current; Frontier.Enqueue(p); }
                     }
@@ -142,7 +167,7 @@ namespace TreDe
         {
             for ( int level = z; level >= 0; level--)
             {
-                if (playState.IsOccupied(x, y, level)) { return level + 1; }
+                if (playState.IsBlocked(x, y, level)) { return level + 1; }
             }
             return 0;
         }

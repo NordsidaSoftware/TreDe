@@ -31,5 +31,10 @@ namespace TreDe
             this.Y = Y;
             this.Z = Z;
         }
+
+        public override string ToString()
+        {
+            return "(" + X.ToString() + "," + Y.ToString() + "," + Z.ToString() + ")";
+        }
     }
 }

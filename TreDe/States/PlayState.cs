@@ -30,7 +30,7 @@ namespace TreDe
         public delegate void HappeningEventHandler(object sender, HappeningArgs e); //1.declare delegate
         public event HappeningEventHandler HappeningEvent;  //2.declare event
 
-        public void RaiseHappeingEvent(HappeningArgs args)          // 3.method to raise event
+        public void RaiseHappeningEvent(HappeningArgs args)          // 3.method to raise event
         {
             HappeningEvent?.Invoke(this, args);
         }
@@ -58,9 +58,41 @@ namespace TreDe
         
         }
 
-        internal bool IsOccupied(int x, int y, int z)
+        internal bool IsBlocked(int x, int y, int z)
         {
-            return ConvertFromByteToTiles.MapByteToTile[Terrain[x, y, z]].blocked;
+            return TileManager.MapByteToTile[Terrain[x, y, z]].blocked;
+        }
+
+        internal bool Interact(int x, int y, int z)
+        {
+            switch ((TileType)Terrain[x, y, z])
+            {
+                case TileType.DoorClosed:
+                {
+                        Structure s = TileManager.MapStringToStructure["DoorOpen"];
+                        for (int layer = 0; layer < s.tiles.Length; layer++)
+                        {
+                            Terrain[x, y, layer] = (byte)s.tiles[layer];
+                        }
+                        RaiseHappeningEvent(new HappeningArgs(TypeOfComponent.PHYSIC, "DOOR OPENED"));
+                        return true;
+                }
+                     case TileType.DoorOpen:
+                {
+                        Structure s = TileManager.MapStringToStructure["DoorClosed"];
+                        for (int layer = 0; layer < s.tiles.Length; layer++)
+                        {
+                            Terrain[x, y, layer] = (byte)s.tiles[layer];
+                        }
+                        RaiseHappeningEvent(new HappeningArgs(TypeOfComponent.PHYSIC, "DOOR CLOSED"));
+                        return true;
+                }
+
+                default: { break; }
+            }
+
+            return false;
+
         }
  
         public override void Update(GameTime gameTime)
@@ -74,6 +106,8 @@ namespace TreDe
             if (input.WasKeyPressed(Keys.Down)) { GOmanager.player.Move(0, 1, 0); }
             if (input.WasKeyPressed(Keys.Left)) { GOmanager.player.Move(-1, 0, 0); }
             if (input.WasKeyPressed(Keys.Right)) { GOmanager.player.Move(1, 0, 0); }
+            if (input.WasKeyPressed(Keys.OemPlus)) { GOmanager.player.Move(0, 0, 1); }
+            if (input.WasKeyPressed(Keys.OemMinus)) { GOmanager.player.Move(0, 0, -1); }
 
             if (input.IsKeyPressed(Keys.Space)) { PhysE.AddWaterTop(GOmanager.player.position.X + 3,
                                                                     GOmanager.player.position.Y); }
@@ -82,8 +116,7 @@ namespace TreDe
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            // draw agents and world here. The renderer will
-            // take the display class ( by IRenderable interface ) and draw to the screen.
+           // Draw in playState is handled by render class
         }
     }
 }

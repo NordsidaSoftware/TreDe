@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace TreDe
@@ -10,6 +9,7 @@ namespace TreDe
         public Point3 position;
         public int Glyph;
         public Color color;
+        public string Name;
         public List<Component> Components;
 
         public GameObject(GameObjectManager GOmanager)
@@ -42,11 +42,12 @@ namespace TreDe
             return null;
         }
 
-
         public virtual void Update(GameTime gameTime)
         { }
 
-        public virtual void Draw(SpriteBatch spriteBatch)
-        { }
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

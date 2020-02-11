@@ -15,6 +15,10 @@ namespace TreDe
         public byte[,] Grid;
         public Color[,] ForegroundColor;
         public Color[,] BackgroundColor;
+
+        private const int MinLine = 3;
+        private const int MaxLine = 8;
+        private Point Cursor;
        
         public int Width { get { return Window.Width; } }
         public int Height { get { return Window.Height; }  }
@@ -38,15 +42,31 @@ namespace TreDe
             Grid = new byte[Width, Height];
             ForegroundColor = new Color[W, H];
             BackgroundColor = new Color[W, H];
+
+            SetDefaulBackgroundColor(Color.Black);
+            SetDefaulForegroundColor(Color.White);
+
+            Cursor = new Point(0, MinLine);
         }
 
-        public void SetBackground(Color color)
+        public void SetDefaulBackgroundColor(Color color)
         {
             for (int x = 0; x < Width; x++)
             {
                 for (int y = 0; y < Height; y++)
                 {
                     BackgroundColor[x, y] = color;
+                }
+            }
+        }
+
+        public void SetDefaulForegroundColor(Color color)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                for (int y = 0; y < Height; y++)
+                {
+                    ForegroundColor[x, y] = color;
                 }
             }
         }
@@ -79,17 +99,71 @@ namespace TreDe
                     spriteBatch.Draw( texture,
                         new Rectangle((x * FontSize) + this.X, (y * FontSize)+this.Y, FontSize, FontSize),
                         new Rectangle(x_offset, y_offset, TextureGlyphSize, TextureGlyphSize), 
-                        Color.White );
+                        ForegroundColor[x,y] );
                 }
             }
         }
 
-        internal void SetMessage(string text)
+        //  ===================== TEXT DISPLAY CODE =====================
+        internal void WriteLine(string text, Color color)
         {
-            for ( int i = 0; i < text.Length; i++)
+
+            for (int i = 0; i < text.Length; i++)
             {
-                Grid[i, 5] = (byte)text[i];
+                Grid[Cursor.X, Cursor.Y] = (byte)text[i];
+                ForegroundColor[Cursor.X, Cursor.Y] = color;
+                Cursor.X++;
+                if (Cursor.X > Width) { LineShift(); }
             }
+            LineShift();
+        }
+
+        internal void SetText(string text)
+        {
+            WriteLine(text, Color.White);
+        }
+
+        private void LineShift()
+        {
+            Cursor.Y++;
+            Cursor.X = 0;
+            if (Cursor.Y > MaxLine) { FlushText(); }
+        }
+
+        private void FlushText()
+        {
+            for ( int x = 0; x < Width; x++)
+            {
+                for ( int i = 0; i <= MaxLine; i++)
+                {
+                    if ( i == MaxLine)
+                    {
+                        Grid[x, MinLine] = Grid[x, i];
+                        ForegroundColor[x, MinLine] = ForegroundColor[x, i];
+                        BackgroundColor[x, MinLine] = BackgroundColor[x, i];
+                    }
+                    ClearGrid(x, i);
+                }
+            }
+            Cursor = new Point(0, MinLine+1);
+        }
+
+        public void ClearText()
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                for (int y = 0; y <= MaxLine; y++)
+                {
+                    ClearGrid(x, y);
+                }
+            }
+        }
+
+        private void ClearGrid(int x, int y)
+        {
+            Grid[x, y] = 0;
+            ForegroundColor[x, y] = Color.White;
+            BackgroundColor[x, y] = Color.Black;
         }
     }
 }

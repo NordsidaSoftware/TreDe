@@ -1,6 +1,8 @@
 ﻿namespace TreDe
 {
-    public enum TypeOfComponent { TEST }
+    public enum TypeOfComponent { TEST,
+        PHYSIC
+    }
     public class Component
     {
         public TypeOfComponent typeOfComponent;

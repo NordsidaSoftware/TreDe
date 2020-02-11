@@ -11,12 +11,15 @@ namespace TreDe
         private int worldDepth;
         private byte[,,] Map;
 
+        public GameObjectManager GOManager;
+
         public MapReader(int worldWidth, int worldHeight, int worldDepth)
         {
             this.worldWidth = worldWidth;
             this.worldHeight = worldHeight;
             this.worldDepth = worldDepth;
             Map = new byte[worldWidth, worldHeight, worldDepth];
+            
         }
 
         internal byte[,,] ReadMap()
@@ -55,16 +58,17 @@ namespace TreDe
             foreach (Point p in RectangleExtension.Area(house))
                 Map[p.X, p.Y, 0] = (byte)TileType.Empty;
 
-            AddStructure(15, 20, "Door");
+            AddStructure(15, 20, "DoorClosed");
+            
 
             return Map;
         }
 
         private void AddStructure(int x, int y, string structureAsString)
         {
-            if (ConvertFromByteToTiles.StructureDictionary.ContainsKey(structureAsString))
+            if (TileManager.MapStringToStructure.ContainsKey(structureAsString))
             {
-                Structure s = ConvertFromByteToTiles.StructureDictionary[structureAsString];
+                Structure s = TileManager.MapStringToStructure[structureAsString];
                 for ( int layer = 0; layer < s.tiles.Length; layer++)
                 {
                     Map[x, y, layer] = (byte)s.tiles[layer];
