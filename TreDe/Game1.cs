@@ -13,7 +13,7 @@ namespace TreDe
         SpriteBatch spriteBatch;
         InputHandler input;
         StateManager stateManager;
-        Renderer renderer;
+       // Renderer renderer;
 
         public Settings settings;
         FPS fps;
@@ -50,10 +50,10 @@ namespace TreDe
             stateManager = new StateManager(this);
             Components.Add(stateManager);
 
-            PlayState ps = new PlayState();
-            stateManager.Push(ps);
+            PlayState playstate = new PlayState();
+            stateManager.Push(playstate);
 
-            renderer = new Renderer(stateManager, ps);
+           // renderer = new Renderer(stateManager, playstate);
 
 
             base.Initialize();
@@ -90,7 +90,8 @@ namespace TreDe
             if (input.WasKeyPressed(Keys.Escape))
                 Exit();
 
-            renderer.Update();
+           
+          //  renderer.Update();
            
 
             base.Update(gameTime);
@@ -106,7 +107,7 @@ namespace TreDe
             GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin();
-            renderer.Draw(spriteBatch);
+            // renderer.Draw(spriteBatch);
             stateManager.Draw(spriteBatch);
             spriteBatch.End();
 

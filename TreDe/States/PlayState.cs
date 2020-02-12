@@ -11,11 +11,13 @@ namespace TreDe
     public class PlayState : State, IRenderable
     {
 
-        int WorldWidth = 400;
-        int WorldHeight = 200;
-        int WorldDepth = 8;
+        int WorldWidth;
+        int WorldHeight;
+        int WorldDepth;
         public byte[,,] Terrain;        // 3D map grid of the gameworld terrain
 
+
+        public Renderer renderer;
         public GameObjectManager GOmanager;
 
         public InputHandler input;
@@ -41,20 +43,25 @@ namespace TreDe
 
         public override void OnEnter()
         {
+            Settings s = (Settings)Manager.Game.Services.GetService(typeof(ISettings));
             input = (InputHandler)Manager.Game.Services.GetService(typeof(IIhandler));
             GOmanager = new GameObjectManager(this);
             PhysE = new PhysEngine(this);
 
             CameraPosition = Vector2.Zero;
-           
-         
+
+
             // World generation 
             // ================
-
+            WorldWidth = s.WorldWidth;
+            WorldHeight = s.WorldHeight;
+            WorldDepth = s.WorldDepth;
             Terrain = new byte[WorldWidth, WorldHeight, WorldDepth];
 
             MapReader mr = new MapReader(WorldWidth, WorldHeight, WorldDepth);
             Terrain = mr.ReadMap();
+
+            renderer = new Renderer(Manager, this);
         
         }
 
@@ -113,10 +120,12 @@ namespace TreDe
                                                                     GOmanager.player.position.Y); }
 
             PhysE.Update(gameTime);
+            renderer.Update();
         }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
-           // Draw in playState is handled by render class
+            renderer.Draw(spriteBatch);
         }
     }
 }

@@ -5,13 +5,21 @@
     {
         public int WorldWidth, WorldHeight, WorldDepth;
         public int TileSize;
-        public Settings(int TileSize = 20, int WorldWidth = 800, int WorldHeight = 400, 
-            int WorldDepth = 8)
+        public int TextureTiles;
+        public int TextureTileSize;
+        public string Font;
+        public Settings()
         {
-            this.TileSize = TileSize;
-            this.WorldWidth = WorldWidth;
-            this.WorldHeight = WorldHeight;
-            this.WorldDepth = WorldDepth;
+            // FONT //
+            Font = "cp437T";
+            TileSize = 20;
+            TextureTiles = 16;
+            TextureTileSize = 10;
+
+            // WORLD //
+            WorldWidth = 800;
+            WorldHeight = 400;
+            WorldDepth = 8;
         }
     }
 }

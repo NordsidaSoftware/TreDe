@@ -33,16 +33,17 @@ namespace TreDe
         public Renderer(StateManager Manager, IRenderable renderTarget)
         {
             Settings s = (Settings)Manager.Game.Services.GetService(typeof(ISettings));
-            texture = Manager.Game.Content.Load<Texture2D>("cp437T");
+            texture = Manager.Game.Content.Load<Texture2D>(s.Font);
 
             Point TileScreen;
             TileSize = s.TileSize;
-            TextureTiles = 16;
-            TextureTileSize = 10;
+            TextureTiles = s.TextureTiles;
+            TextureTileSize = s.TextureTileSize;
+
             TopScale = 1.2f;
 
             this.renderTarget = (PlayState)renderTarget;
-            this.renderTarget.HappeningEvent += Test;
+            this.renderTarget.HappeningEvent += RecieveTextFromGame;
             TileScreen = new Point(Manager.Game.GraphicsDevice.Viewport.Width,
                                   Manager.Game.GraphicsDevice.Viewport.Height-250);
 
@@ -60,10 +61,13 @@ namespace TreDe
                 Manager.Game.GraphicsDevice.Viewport.Width,
                 250, this);
 
-         
-            
 
+            CalculateScaledPoints();
 
+        }
+
+        private void CalculateScaledPoints()
+        {
             // Precalculate the scale offset for each grid on the screen
             // ===========================================================
             ScaledPoints = new fPoint[ScreenTilesX, ScreenTilesY];
@@ -81,13 +85,11 @@ namespace TreDe
                     ScaledPoints[x + (ScreenTilesX / 2), y + (ScreenTilesY / 2)] = new fPoint(dx, dy);
                 }
             }
-
-            // =======================================================
         }
 
-        private void Test(object sender, HappeningArgs e)
+        private void RecieveTextFromGame(object sender, HappeningArgs happening)
         {
-            LowerTextDisplay.WriteLine(e.text, Color.Blue) ;
+            LowerTextDisplay.WriteLine(happening.text, Color.Blue) ;
         }
 
         internal void MoveCamera(int dx, int dy)
@@ -135,7 +137,7 @@ namespace TreDe
 
             // DRAW TERRAIN //
 
-            Tile[] structure = new Tile[8];
+            Tile tile;
 
             for (int x = 0; x < ScreenTilesX; x++)
             {
@@ -150,21 +152,13 @@ namespace TreDe
                     TopX = ScaledPoints[x, y].X;
                     TopY = ScaledPoints[x, y].Y;
 
-
-                    for (int i = 0; i < TilesDepth; i++)
-                    {
-                        structure[i] = TileManager.MapByteToTile[renderTarget.Terrain[tileX, tileY, i]];
-                    }
-
-
-
                     Rectangle r = new Rectangle(x * TileSize, y * TileSize, TileSize, TileSize);
 
                     for (int z = 0; z < TilesDepth; z++)
                     {
-                    
-                        strX_offset = structure[z].charPart % TextureTiles * TextureTileSize;
-                        strY_offset = structure[z].charPart / TextureTiles * TextureTileSize;
+                        tile = TileManager.MapByteToTile[renderTarget.Terrain[tileX, tileY, z]];
+                        strX_offset = tile.charPart % TextureTiles * TextureTileSize;
+                        strY_offset = tile.charPart / TextureTiles * TextureTileSize;
 
                         perspectiveX = TopX / TilesDepth;
                         perspectiveY = TopY / TilesDepth;
@@ -174,7 +168,7 @@ namespace TreDe
                         spriteBatch.Draw(texture, r,
                                          new Rectangle(strX_offset, strY_offset, TextureTileSize, TextureTileSize),
 
-                                         new Color(structure[z].color, (1.0f - z / 8.0f)));
+                                         new Color(tile.color, (1.0f - z / 8.0f)));
 
 
 

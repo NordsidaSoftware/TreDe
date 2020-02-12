@@ -4,21 +4,20 @@ using System.Collections.Generic;
 
 namespace TreDe
 {
+
+    /// <summary>
+    /// State is the controlling class for the current state in the statemanager 
+    /// </summary>
     public abstract class State
     {
         internal StateManager Manager;
         public void Initialize(StateManager Manager) { this.Manager = Manager; }
         public abstract void Update(GameTime gameTime);
-        public abstract void Draw(SpriteBatch spriteBatch);
 
+        public virtual void Draw(SpriteBatch spriteBatch) { }
         public virtual void OnEnter() { }
         public virtual void OnExit() { }
     }
-
-
-
-
-
 
 
 
