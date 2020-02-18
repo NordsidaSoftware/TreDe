@@ -7,7 +7,9 @@
         public int TileSize;
         public int TextureTiles;
         public int TextureTileSize;
+
         public string Font;
+    
         public Settings()
         {
             // FONT //

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace TreDe
@@ -9,9 +10,20 @@ namespace TreDe
         public Player player;
         public List<Actor> ActorsList;
         public GameObject[,,] ActorsGrid;
-        public List<Item>[,,] ItemGrid;
-     
+        /*
+         * FOrt før jeg glemmer det. Hver person kan ha en ID, siden det bare er å lagre 
+         * en int. PErsoner som ikke er fokusert lagres kun som en abstraksjon
+         * samme for utstyr tenker jeg. Kan bare være et item pr. tile, men flere
+         * items sammen kan være en pile
+         * 
+         * 
+         * 
+         * */
 
+
+        public int [,,] ItemGrid;
+        public Dictionary<int, Item> ItemDictionary;
+        
         Random rnd;
      
      
@@ -21,28 +33,14 @@ namespace TreDe
             this.playState = playState;
             rnd = new Random();
 
-         
-            ItemGrid = new List<Item>[s.WorldWidth, s.WorldHeight, s.WorldDepth];
-            for ( int x = 0; x < s.WorldWidth;x++)
-
-            {
-                for (int y = 0; y < s.WorldHeight; y++)
-                {
-                    for (int z = 0; z < s.WorldDepth; z++)
-                    {
-                        ItemGrid[x, y,z] = new List<Item>();
-                    }
-                }
-            }
-
-            
-
+            ItemGrid = new int[s.WorldWidth, s.WorldHeight, s.WorldDepth];
+            ItemDictionary = new Dictionary<int, Item>();
+           
             // BSP OR WHAT ???¤%?¤%?
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 10000; i++)
             {
-                Bucket b = new Bucket(this, new Point3(rnd.Next(0, s.WorldWidth),
-                    rnd.Next(0, s.WorldHeight), rnd.Next(0, s.WorldDepth)));
-                NewItem(b);
+                Bucket b = new Bucket(this, new Point3(rnd.Next(0, 100), rnd.Next(0,100), 0));
+                DropNewItemOnTerrain(b);
             }
 
             ActorsGrid = new GameObject[s.WorldWidth, s.WorldHeight, s.WorldDepth];
@@ -56,10 +54,37 @@ namespace TreDe
                                                                  0)));
         }
 
-        public void NewItem(Item i)
+        
+        public void DropNewItemOnTerrain(Item i) // ---> Drop 'i' on grid.
         {
-         
-            ItemGrid[i.position.X, i.position.Y, i.position.Z].Add(i);
+            Item other = GetItemAt(i.position.X, i.position.Y, i.position.Z);
+
+            if (other != null)
+            {
+                if (other is Pile p)  // ---> put in existing pile or make new pile
+                {
+                    p.Container.Add(i);
+                    return;
+                }
+                else
+                { //       Making a new pile, adding both items and register
+                    Pile newPile = new Pile(this, i.position);
+                    newPile.Container.Add(other);
+                    newPile.Container.Add(i);
+
+                    ItemDictionary[newPile.ID] = newPile;
+                    ItemGrid[newPile.position.X, newPile.position.Y, newPile.position.Z] = newPile.ID;
+                    return;
+                }
+
+            }
+
+            else   //  ---> empty grid, insert new item
+            {
+                // Register item on grid. Register in lookuptable
+                ItemDictionary[i.ID] = i;
+                ItemGrid[i.position.X, i.position.Y, i.position.Z] = (i.ID);
+            }
         }
 
         internal bool IsActorsGridOccupied(int x, int y, int z)
@@ -67,9 +92,16 @@ namespace TreDe
             return (ActorsGrid[x, y, z] != null);
         }
 
-        internal List<Item> GetItemsAt(int x, int y, int z)
+        internal bool IsItemAt(int x, int y, int z)
         {
-            return ItemGrid[x, y, z];
+            if (ItemGrid[x,y,z] != 0) { return true; }
+            else { return false; }
+        }
+        internal Item GetItemAt(int x, int y, int z)
+        {
+            int ID = ItemGrid[x, y, z];
+            if (ID == 0) { return null; }
+            return ItemDictionary[ID];
         }
 
         private void NewActor(Actor actor)

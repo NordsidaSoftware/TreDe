@@ -17,6 +17,9 @@ namespace TreDe
         public virtual void Draw(SpriteBatch spriteBatch) { }
         public virtual void OnEnter() { }
         public virtual void OnExit() { }
+
+       
+
     }
 
 
@@ -26,6 +29,9 @@ namespace TreDe
         private Stack<State> StateStack;
 
         private bool IsNotEmpty { get { return StateStack.Count > 0; } }
+        public State currentState {  get { if (IsNotEmpty) return StateStack.Peek();
+                else return null;
+            } }
         public StateManager(Game game) : base(game)
         {
             StateStack = new Stack<State>();
@@ -39,6 +45,7 @@ namespace TreDe
         public void Pop()
         {
             if (IsNotEmpty) { StateStack.Pop().OnExit(); }
+         
         }
 
         public override void Update(GameTime gameTime)
@@ -47,6 +54,7 @@ namespace TreDe
             {
                 StateStack.Peek().Update(gameTime);
             }
+            else { Game.Exit(); }
         }
 
         public void Draw(SpriteBatch spriteBatch)

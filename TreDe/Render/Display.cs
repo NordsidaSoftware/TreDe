@@ -26,7 +26,7 @@ namespace TreDe
         public int Y {  get { return Window.Y; } }
         public Point Center { get { return Window.Center; } }
 
-        public Display(int Display_X, int Display_Y, int width, int height, Renderer r)
+        public Display(int Display_X, int Display_Y, int width, int height, Render r)
         {
           
             texture = r.texture;

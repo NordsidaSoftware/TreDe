@@ -46,9 +46,12 @@
     <Compile Include="Components\Component.cs" />
     <Compile Include="GameObjects\Items\Bucket.cs" />
     <Compile Include="GameObjects\Items\Item.cs" />
+    <Compile Include="GameObjects\Items\Pile.cs" />
     <Compile Include="HappeningArgs.cs" />
     <Compile Include="GameObjects\GameObjectManager.cs" />
     <Compile Include="Render\Display.cs" />
+    <Compile Include="States\SplashScreenState.cs" />
+    <Compile Include="Render\TestRenderer.cs" />
     <Compile Include="Utils\FPS.cs" />
     <Compile Include="World\MapReader.cs" />
     <Compile Include="Render\TileManager.cs" />

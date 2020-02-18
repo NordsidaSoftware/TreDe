@@ -5,48 +5,64 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TreDe
 {
-    public class Renderer
+
+    public abstract class Render
     {
+        // TEXTURE FONT DATA //
         public Texture2D texture;   // texture of font
         public int TextureTiles;    // number of glyphs in each row in font texture
         public int TextureTileSize; // size in px. of each glyph
-
-        public float TopScale;      // Scale of top layer
-        public int TilesWidth;
-        public int TilesHeight;
+        
+        // TILE DATA //
         public int TileSize;       // Size of tile on display
 
-        public int ScreenTilesX;
-        public int ScreenTilesY;
+        // SCREEN DATA //
+        public int ScreenTilesX;   // NR of tiles on x axis
+        public int ScreenTilesY;   // NR of tiles on y axis
 
-        public Vector2 Origin;
+        public virtual void Draw(SpriteBatch spriteBatch) { }
 
-        public fPoint[,] ScaledPoints; // precalculated scaled points
-        public int TilesDepth;
-
-
-        private PlayState renderTarget;
-
-        private Display LowerTextDisplay;
-
-        
-        public Renderer(StateManager Manager, IRenderable renderTarget)
+        public Render(StateManager Manager)
         {
             Settings s = (Settings)Manager.Game.Services.GetService(typeof(ISettings));
             texture = Manager.Game.Content.Load<Texture2D>(s.Font);
 
-            Point TileScreen;
             TileSize = s.TileSize;
             TextureTiles = s.TextureTiles;
             TextureTileSize = s.TextureTileSize;
+        }
+    }
 
+
+    public class PlayStateRender: Render
+    {
+        public PlayState renderTarget;
+        private Display LowerTextDisplay;
+
+        // PERSPECTIVE EFFECT DATA //
+        public float TopScale;      // Scale of top layer
+        public fPoint[,] ScaledPoints; // precalculated scaled points
+
+        public Vector2 Origin;      // CAMERA TOP LEFT POSITION
+
+        // PLAYSTATE WORLD DATA //
+        public int TilesWidth;
+        public int TilesHeight;
+        public int TilesDepth;
+
+        
+        public PlayStateRender(StateManager Manager, PlayState renderTarget):base(Manager)
+        {
+            this.renderTarget = renderTarget;
+            this.renderTarget.HappeningEvent += RecieveTextFromGame;
+           
+            Point TileScreen;
             TopScale = 1.2f;
 
-            this.renderTarget = (PlayState)renderTarget;
-            this.renderTarget.HappeningEvent += RecieveTextFromGame;
             TileScreen = new Point(Manager.Game.GraphicsDevice.Viewport.Width,
-                                  Manager.Game.GraphicsDevice.Viewport.Height-250);
+                                  Manager.Game.GraphicsDevice.Viewport.Height-150);
 
+            Settings s = (Settings)Manager.Game.Services.GetService(typeof(ISettings));
             TilesWidth = s.WorldWidth;
             TilesHeight = s.WorldHeight;
             TilesDepth = s.WorldDepth;
@@ -57,9 +73,9 @@ namespace TreDe
             ScreenTilesY = TileScreen.Y / TileSize;
 
             LowerTextDisplay = new Display(0, 
-                Manager.Game.GraphicsDevice.Viewport.Height - 250, 
+                Manager.Game.GraphicsDevice.Viewport.Height - 150, 
                 Manager.Game.GraphicsDevice.Viewport.Width,
-                250, this);
+                150, this);
 
 
             CalculateScaledPoints();
@@ -130,7 +146,7 @@ namespace TreDe
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             float TopX, TopY, perspectiveX, perspectiveY;
             int strX_offset, strY_offset;
@@ -138,6 +154,7 @@ namespace TreDe
             // DRAW TERRAIN //
 
             Tile tile;
+            Rectangle rectangle;
 
             for (int x = 0; x < ScreenTilesX; x++)
             {
@@ -152,7 +169,7 @@ namespace TreDe
                     TopX = ScaledPoints[x, y].X;
                     TopY = ScaledPoints[x, y].Y;
 
-                    Rectangle r = new Rectangle(x * TileSize, y * TileSize, TileSize, TileSize);
+                    rectangle = new Rectangle(x * TileSize, y * TileSize, TileSize, TileSize);
 
                     for (int z = 0; z < TilesDepth; z++)
                     {
@@ -162,10 +179,10 @@ namespace TreDe
 
                         perspectiveX = TopX / TilesDepth;
                         perspectiveY = TopY / TilesDepth;
-                        r.Offset(perspectiveX * z, perspectiveY * z);
+                        rectangle.Offset(perspectiveX * z, perspectiveY * z);
 
                         
-                        spriteBatch.Draw(texture, r,
+                        spriteBatch.Draw(texture, rectangle,
                                          new Rectangle(strX_offset, strY_offset, TextureTileSize, TextureTileSize),
 
                                          new Color(tile.color, (1.0f - z / 8.0f)));
@@ -177,43 +194,61 @@ namespace TreDe
                             strX_offset = 219 % TextureTiles * TextureTileSize;
                             strY_offset = 219 / TextureTiles * TextureTileSize;
 
-                            spriteBatch.Draw(texture, r,
+                            spriteBatch.Draw(texture, rectangle,
                                          new Rectangle(strX_offset, strY_offset, TextureTileSize, TextureTileSize),
 
                                          new Color(Color.LightBlue, (1.0f - z / 8.0f)));
                         }
-                        List<Item> items = renderTarget.GOmanager.GetItemsAt(tileX, tileY, z);
-                        if ( items.Count > 0)
-                        {
-                            foreach (Item i in items)
-                            {
-                                strX_offset = i.Glyph % TextureTiles * TextureTileSize;
-                                strY_offset = i.Glyph / TextureTiles * TextureTileSize;
 
-                                spriteBatch.Draw(texture, r,
+                        
+                        Item item = renderTarget.GOmanager.GetItemAt(tileX, tileY, z);
+                        if ( item != null)
+                        {
+                           
+                            
+                                strX_offset = item.Glyph % TextureTiles * TextureTileSize;
+                                strY_offset = item.Glyph / TextureTiles * TextureTileSize;
+
+                                spriteBatch.Draw(texture, rectangle,
                                              new Rectangle(strX_offset, strY_offset, TextureTileSize, TextureTileSize),
 
-                                             new Color(i.color, (1.0f - z / 8.0f)));
-                            }
+                                             new Color(item.color, (1.0f - z / 8.0f)));
+                            
                         }
-
+                        
                         GameObject GO = renderTarget.GOmanager.GetActorAt(tileX, tileY, z);
                         if (GO != null)
                         {
                             strX_offset = GO.Glyph % TextureTiles * TextureTileSize;
                             strY_offset = GO.Glyph / TextureTiles * TextureTileSize;
 
-                            spriteBatch.Draw(texture, r,
+                            spriteBatch.Draw(texture, rectangle,
                                          new Rectangle(strX_offset, strY_offset, TextureTileSize, TextureTileSize),
 
                                          new Color(GO.color, (1.0f - z / 8.0f)));
                         }
+                        
                     }
                 }
             }
 
 
             LowerTextDisplay.Draw(spriteBatch);
+        }
+    }
+
+    public class SingleDisplayRenderer:Render
+    {
+        Display display;
+        public SingleDisplayRenderer(StateManager Manager):base(Manager)
+        {
+            display = new Display(0, 0, 100, 50, this);
+            display.WriteLine("HELLO", Color.White);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            display.Draw(spriteBatch);
         }
     }
 }

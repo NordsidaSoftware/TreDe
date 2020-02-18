@@ -1,22 +1,19 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace TreDe
 {
-    /// <summary>
-    /// This is the main type for your game.
-    /// </summary>
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         InputHandler input;
-        StateManager stateManager;
-       // Renderer renderer;
+        public StateManager stateManager;
 
         public Settings settings;
         FPS fps;
+
+        TestRenderer testRenderer;
 
 
         public Game1()
@@ -35,14 +32,14 @@ namespace TreDe
         /// </summary>
         protected override void Initialize()
         {
+          //  testRenderer = new TestRenderer(this);
+           // Components.Add(testRenderer);
 
             fps = new FPS(this);
-            settings = new Settings();
-          
 
+            settings = new Settings();
             Services.AddService(typeof(ISettings), settings);
                 
-
             input = new InputHandler(this);
             Components.Add(input);
             Services.AddService(typeof(IIhandler), input);
@@ -50,10 +47,8 @@ namespace TreDe
             stateManager = new StateManager(this);
             Components.Add(stateManager);
 
-            PlayState playstate = new PlayState();
-            stateManager.Push(playstate);
-
-           // renderer = new Renderer(stateManager, playstate);
+            PlayState ps = new PlayState();
+            stateManager.Push(ps);
 
 
             base.Initialize();
@@ -87,13 +82,6 @@ namespace TreDe
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (input.WasKeyPressed(Keys.Escape))
-                Exit();
-
-           
-          //  renderer.Update();
-           
-
             base.Update(gameTime);
         }
 
@@ -103,14 +91,12 @@ namespace TreDe
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            fps.Draw(gameTime);
-            GraphicsDevice.Clear(Color.Black);
 
+            fps.Draw(gameTime);  
+            GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
-            // renderer.Draw(spriteBatch);
             stateManager.Draw(spriteBatch);
             spriteBatch.End();
-
             base.Draw(gameTime);
         }
     }

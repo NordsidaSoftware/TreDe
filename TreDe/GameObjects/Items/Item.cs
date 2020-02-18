@@ -4,9 +4,11 @@ namespace TreDe
 {
     public class Item : GameObject
     {
+        public static int IDCounter;
+        public int ID;
         public Item(GameObjectManager GOmanager) : base(GOmanager)
         {
-
+            ID = GetID();
         }
 
         public override void FireEvent(object sender, HappeningArgs args)
@@ -23,5 +25,7 @@ namespace TreDe
         {
             base.Update(gameTime);
         }
+
+        public static int GetID() {return ++IDCounter; }
     }
 }

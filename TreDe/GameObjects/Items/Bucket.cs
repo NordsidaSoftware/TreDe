@@ -7,8 +7,10 @@ using Microsoft.Xna.Framework;
 
 namespace TreDe
 {
-    public class Bucket : Item
+    public interface Container { void Add(Item i); bool IsFull(); List<Item> GetItems(); }
+    public class Bucket : Item, Container
     {
+        Item Contained;
         public Bucket(GameObjectManager GOmanager, Point3 position) : base(GOmanager)
         {
             this.position = position;
@@ -19,35 +21,33 @@ namespace TreDe
 
         public override string ToString()
         {
-            return base.ToString();
+
+            if (Contained != null)
+                return Name + " containing a " + Contained.ToString();
+            else return base.ToString();
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
         }
+
+        void Container.Add(Item i)
+        {
+            Contained = i;
+        }
+
+        List<Item> Container.GetItems()
+        {
+            return new List<Item>() { Contained };
+        }
+
+        bool Container.IsFull()
+        {
+            if (Contained != null) { return true; }
+            else return false;
+        }
     }
 
-    public class OOPDoor : Item
-    {
-        public OOPDoor(GameObjectManager GOmanager) : base(GOmanager)
-        {
-            Name = "TestDoor";
-            Glyph = '=';
-            color = Color.Black;
-                 
-        }
 
-        public override void FireEvent(object sender, HappeningArgs args)
-        {
-            base.FireEvent(sender, args);
-        }
-
-        public override Component GetComponent(TypeOfComponent type)
-        {
-            return base.GetComponent(type);
-        }
-
-      
-    }
 }

@@ -16,35 +16,41 @@ namespace TreDe
         public virtual void Move(int dx, int dy, int dz)
         {
             
+            // 1.Check if tile is blocked
             if (GOmanager.playState.IsBlocked(position.X + dx, position.Y + dy, position.Z + dz))
-            {
-
-                /// HERE IS THE FRONTIER ! //
+            {  
+                // 2. if blocked, can it be interacted with ?
                 GOmanager.playState.Interact(position.X + dx, position.Y + dy, position.Z + dz);
-                
-                   
-                
             }
 
-           else
-            {
+           else // 3.tile is not blocked
+            {      
+            
+                // 4. check if tile is occupied by other actor.
                 if (!GOmanager.IsActorsGridOccupied(position.X + dx, position.Y + dy, position.Z + dz))
-                {
+                {   
+                    // 5. Not occupied, move into tile
                     GOmanager.ActorMove(position, dx, dy, dz);
                     position.X += dx;
                     position.Y += dy;
                     position.Z += dz;
 
+                    // 6. Interact with tile just exited : (close doors )
                     GOmanager.playState.Interact(position.X, position.Y, position.Z);
                 }
             }
 
-            // TEST EVENT DRIVEN MESSAGE TO RENDERER :
-            GOmanager.playState.RaiseHappeningEvent(new HappeningArgs(TypeOfComponent.TEST, "MOVE: " + position.ToString()));
-                
 
-            // =============================
-            // if (state.GetGameObjectAt(position.X, position.Y, position.Z) != null) { }
+            // Finally : Send text to render about items in tile. Just a test.
+            // TEST EVENT DRIVEN MESSAGE TO RENDERER :
+            if (GOmanager.IsItemAt(position.X, position.Y, position.Z))
+            {
+            GOmanager.playState.RaiseHappeningEvent(
+                new HappeningArgs(
+                    TypeOfComponent.TextMessage, "ITEM : " 
+                    + GOmanager.GetItemAt(position.X, position.Y, position.Z)));
+            }
+                
         }
 
         public override string ToString()

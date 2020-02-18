@@ -17,7 +17,7 @@ namespace TreDe
         public byte[,,] Terrain;        // 3D map grid of the gameworld terrain
 
 
-        public Renderer renderer;
+        public PlayStateRender renderer;
         public GameObjectManager GOmanager;
 
         public InputHandler input;
@@ -37,7 +37,6 @@ namespace TreDe
             HappeningEvent?.Invoke(this, args);
         }
         // %%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
         
 
@@ -61,7 +60,7 @@ namespace TreDe
             MapReader mr = new MapReader(WorldWidth, WorldHeight, WorldDepth);
             Terrain = mr.ReadMap();
 
-            renderer = new Renderer(Manager, this);
+           renderer = new PlayStateRender(Manager, this);
         
         }
 
