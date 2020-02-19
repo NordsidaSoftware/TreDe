@@ -50,8 +50,10 @@
     <Compile Include="HappeningArgs.cs" />
     <Compile Include="GameObjects\GameObjectManager.cs" />
     <Compile Include="Render\Display.cs" />
+    <Compile Include="Render\ItemManagerRenderer.cs" />
+    <Compile Include="Render\PlayStateRender.cs" />
+    <Compile Include="States\ItemManagerState.cs" />
     <Compile Include="States\SplashScreenState.cs" />
-    <Compile Include="Render\TestRenderer.cs" />
     <Compile Include="Utils\FPS.cs" />
     <Compile Include="World\MapReader.cs" />
     <Compile Include="Render\TileManager.cs" />

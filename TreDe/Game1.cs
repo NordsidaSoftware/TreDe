@@ -13,8 +13,6 @@ namespace TreDe
         public Settings settings;
         FPS fps;
 
-        TestRenderer testRenderer;
-
 
         public Game1()
         {

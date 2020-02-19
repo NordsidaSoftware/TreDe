@@ -1,15 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace TreDe
 {
     public class Actor : GameObject
     {
-        
+        public List<Item> Inventory;
         public Actor(GameObjectManager GOmanager, Point3 position) : base(GOmanager)
         {
             this.position = position;
             this.Glyph = 1;
             Name = "NPC";
+            Inventory = new List<Item>();
         }
 
 
@@ -51,6 +53,19 @@ namespace TreDe
                     + GOmanager.GetItemAt(position.X, position.Y, position.Z)));
             }
                 
+        }
+
+        public void PickupItem()
+        {
+            // 1.Check if tile contains an Item
+            if (GOmanager.IsItemAt(position.X, position.Y, position.Z)){
+
+                // 2. Pickup item, move to inventory, remove from ItemGrid
+                // need more advanced algorithm to sort out what to to do.
+                Inventory.Add(GOmanager.GetItemAt(position.X, position.Y, position.Z));
+                GOmanager.RemoveItemAt(position);
+            }
+
         }
 
         public override string ToString()

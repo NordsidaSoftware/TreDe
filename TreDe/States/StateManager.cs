@@ -30,8 +30,7 @@ namespace TreDe
 
         private bool IsNotEmpty { get { return StateStack.Count > 0; } }
         public State currentState {  get { if (IsNotEmpty) return StateStack.Peek();
-                else return null;
-            } }
+                                           else return null; } }
         public StateManager(Game game) : base(game)
         {
             StateStack = new Stack<State>();
@@ -44,7 +43,11 @@ namespace TreDe
         }
         public void Pop()
         {
-            if (IsNotEmpty) { StateStack.Pop().OnExit(); }
+            if (IsNotEmpty)
+            {
+                StateStack.Peek().OnExit();
+                StateStack.Pop();
+            }
          
         }
 

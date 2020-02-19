@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 namespace TreDe
 {
    
-        public struct fPoint
+        public struct FPoint
         {
             public float X;
             public float Y;
 
-            public fPoint(float X, float Y)
+            public FPoint(float X, float Y)
             {
                 this.X = X;
                 this.Y = Y;

@@ -12,7 +12,7 @@ namespace TreDe
     public class SplashScreenState : State
     {
         InputHandler input;
-        SingleDisplayRenderer renderer;
+        ItemManagerRenderer renderer;
         
         public SplashScreenState()
         {
@@ -22,7 +22,7 @@ namespace TreDe
         public override void OnEnter()
         {
             input = (InputHandler)Manager.Game.Services.GetService(typeof(IIhandler));
-            renderer = new SingleDisplayRenderer(Manager);
+            renderer = new ItemManagerRenderer(Manager);
             
         }
 

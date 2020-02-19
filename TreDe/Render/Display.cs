@@ -16,8 +16,7 @@ namespace TreDe
         public Color[,] ForegroundColor;
         public Color[,] BackgroundColor;
 
-        private const int MinLine = 3;
-        private const int MaxLine = 8;
+        
         private Point Cursor;
        
         public int Width { get { return Window.Width; } }
@@ -26,6 +25,11 @@ namespace TreDe
         public int Y {  get { return Window.Y; } }
         public Point Center { get { return Window.Center; } }
 
+        public int MinLine { get { return 1; } }
+        public int MaxLine {  get { return Height - 1; } }
+
+
+        
         public Display(int Display_X, int Display_Y, int width, int height, Render r)
         {
           
@@ -118,7 +122,7 @@ namespace TreDe
             LineShift();
         }
 
-        internal void SetText(string text)
+        internal void WriteLine(string text)
         {
             WriteLine(text, Color.White);
         }
@@ -157,6 +161,7 @@ namespace TreDe
                     ClearGrid(x, y);
                 }
             }
+            Cursor = new Point(0, MinLine);
         }
 
         private void ClearGrid(int x, int y)

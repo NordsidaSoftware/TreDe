@@ -7,8 +7,8 @@ using Microsoft.Xna.Framework;
 
 namespace TreDe
 {
-    public interface Container { void Add(Item i); bool IsFull(); List<Item> GetItems(); }
-    public class Bucket : Item, Container
+    public interface IContainer { void Add(Item i); bool IsFull(); List<Item> GetItems(); }
+    public class Bucket : Item, IContainer
     {
         Item Contained;
         public Bucket(GameObjectManager GOmanager, Point3 position) : base(GOmanager)
@@ -32,17 +32,17 @@ namespace TreDe
             base.Update(gameTime);
         }
 
-        void Container.Add(Item i)
+        void IContainer.Add(Item i)
         {
             Contained = i;
         }
 
-        List<Item> Container.GetItems()
+        List<Item> IContainer.GetItems()
         {
             return new List<Item>() { Contained };
         }
 
-        bool Container.IsFull()
+        bool IContainer.IsFull()
         {
             if (Contained != null) { return true; }
             else return false;

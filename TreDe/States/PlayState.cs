@@ -6,9 +6,8 @@ using System.Collections.Generic;
 
 namespace TreDe
 {
-    public interface IRenderable  {   }
   
-    public class PlayState : State, IRenderable
+    public class PlayState : State
     {
 
         int WorldWidth;
@@ -39,7 +38,6 @@ namespace TreDe
         // %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
         
-
         public override void OnEnter()
         {
             Settings s = (Settings)Manager.Game.Services.GetService(typeof(ISettings));
@@ -60,7 +58,7 @@ namespace TreDe
             MapReader mr = new MapReader(WorldWidth, WorldHeight, WorldDepth);
             Terrain = mr.ReadMap();
 
-           renderer = new PlayStateRender(Manager, this);
+            renderer = new PlayStateRender(Manager, this);
         
         }
 
@@ -114,6 +112,9 @@ namespace TreDe
             if (input.WasKeyPressed(Keys.Right)) { GOmanager.player.Move(1, 0, 0); }
             if (input.WasKeyPressed(Keys.OemPlus)) { GOmanager.player.Move(0, 0, 1); }
             if (input.WasKeyPressed(Keys.OemMinus)) { GOmanager.player.Move(0, 0, -1); }
+
+            if (input.WasKeyPressed(Keys.G)) { GOmanager.player.PickupItem(); }
+            if (input.WasKeyPressed(Keys.I)) { Manager.Push(new ItemManagerState(GOmanager.player)); }
 
             if (input.IsKeyPressed(Keys.Space)) { PhysE.AddWaterTop(GOmanager.player.position.X + 3,
                                                                     GOmanager.player.position.Y); }

@@ -23,8 +23,7 @@ namespace TreDe
 
         public int [,,] ItemGrid;
         public Dictionary<int, Item> ItemDictionary;
-        
-        Random rnd;
+        readonly Random rnd;
      
      
         public GameObjectManager(PlayState playState)
@@ -37,7 +36,7 @@ namespace TreDe
             ItemDictionary = new Dictionary<int, Item>();
            
             // BSP OR WHAT ???¤%?¤%?
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < 10; i++)
             {
                 Bucket b = new Bucket(this, new Point3(rnd.Next(0, 100), rnd.Next(0,100), 0));
                 DropNewItemOnTerrain(b);
@@ -85,6 +84,13 @@ namespace TreDe
                 ItemDictionary[i.ID] = i;
                 ItemGrid[i.position.X, i.position.Y, i.position.Z] = (i.ID);
             }
+        }
+
+        internal void RemoveItemAt(Point3 position)
+        {
+            int ID = ItemGrid[position.X, position.Y, position.Z];
+            ItemGrid[position.X, position.Y, position.Z] = 0;
+            ItemDictionary.Remove(ID);
         }
 
         internal bool IsActorsGridOccupied(int x, int y, int z)

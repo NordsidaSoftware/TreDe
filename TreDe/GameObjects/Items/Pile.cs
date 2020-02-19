@@ -2,7 +2,7 @@
 
 namespace TreDe
 {
-    public class Pile : Item, Container
+    public class Pile : Item, IContainer
     {
         public List<Item> Container;
         public Pile(GameObjectManager GOmanager, Point3 position) : base(GOmanager)
@@ -32,18 +32,18 @@ namespace TreDe
         }
 
 
-        void Container.Add(Item i)
+        void IContainer.Add(Item i)
         {
             Container.Add(i);
         }
 
 
-        List<Item> Container.GetItems()
+        List<Item> IContainer.GetItems()
         {
             return Container;
         }
 
-        bool Container.IsFull()
+        bool IContainer.IsFull()
         {
             return false; // <--- infinite pile...
         }
