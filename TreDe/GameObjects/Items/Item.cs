@@ -1,7 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace TreDe
 {
+    public interface IContainer { void Add(Item i); bool IsFull(); bool isEmpty();  List<Item> GetItems(); void RemoveItem(Item item); }
+    public interface IWield { void Wield(); void Unwield(); void Attack(); }
     public class Item : GameObject
     {
         public static int IDCounter;

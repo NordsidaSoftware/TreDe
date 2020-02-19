@@ -39,7 +39,7 @@ namespace TreDe
             for (int i = 0; i < 10; i++)
             {
                 Bucket b = new Bucket(this, new Point3(rnd.Next(0, 100), rnd.Next(0,100), 0));
-                DropNewItemOnTerrain(b);
+                DropItemOnTerrain(b);
             }
 
             ActorsGrid = new GameObject[s.WorldWidth, s.WorldHeight, s.WorldDepth];
@@ -54,7 +54,7 @@ namespace TreDe
         }
 
         
-        public void DropNewItemOnTerrain(Item i) // ---> Drop 'i' on grid.
+        public void DropItemOnTerrain(Item i) // ---> Drop 'i' on grid.
         {
             Item other = GetItemAt(i.position.X, i.position.Y, i.position.Z);
 
@@ -86,7 +86,7 @@ namespace TreDe
             }
         }
 
-        internal void RemoveItemAt(Point3 position)
+        internal void RemoveItemFromTerrain(Point3 position)
         {
             int ID = ItemGrid[position.X, position.Y, position.Z];
             ItemGrid[position.X, position.Y, position.Z] = 0;

@@ -1,13 +1,9 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
 
 namespace TreDe
 {
-    public interface IContainer { void Add(Item i); bool IsFull(); List<Item> GetItems(); }
+
     public class Bucket : Item, IContainer
     {
         Item Contained;
@@ -42,10 +38,20 @@ namespace TreDe
             return new List<Item>() { Contained };
         }
 
+        bool IContainer.isEmpty()
+        {
+            return Contained == null;
+        }
+
         bool IContainer.IsFull()
         {
             if (Contained != null) { return true; }
             else return false;
+        }
+
+        void IContainer.RemoveItem(Item item)
+        {
+            Contained = null;
         }
     }
 

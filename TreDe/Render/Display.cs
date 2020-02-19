@@ -109,9 +109,13 @@ namespace TreDe
         }
 
         //  ===================== TEXT DISPLAY CODE =====================
-        internal void WriteLine(string text, Color color)
-        {
 
+        internal void Write(string text)
+        {
+            Write(text, Color.White);
+        }
+        internal void Write(string text, Color color)
+        {
             for (int i = 0; i < text.Length; i++)
             {
                 Grid[Cursor.X, Cursor.Y] = (byte)text[i];
@@ -119,6 +123,11 @@ namespace TreDe
                 Cursor.X++;
                 if (Cursor.X > Width) { LineShift(); }
             }
+        }
+        internal void WriteLine(string text, Color color)
+        {
+
+            Write(text, color);
             LineShift();
         }
 

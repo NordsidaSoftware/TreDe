@@ -10,8 +10,6 @@ namespace TreDe
         {
             display = new Display(0, 0, Manager.Game.GraphicsDevice.Viewport.Width,
                 Manager.Game.GraphicsDevice.Viewport.Height, this);
-
-            display.WriteLine(" === INVENTORY ===", Color.Red);
         }
        
         public override void Draw(SpriteBatch spriteBatch)

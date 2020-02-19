@@ -43,9 +43,19 @@ namespace TreDe
             return Container;
         }
 
+        bool IContainer.isEmpty()
+        {
+            return Container.Count == 0;
+        }
+
         bool IContainer.IsFull()
         {
             return false; // <--- infinite pile...
+        }
+
+        void IContainer.RemoveItem(Item item)
+        {
+            Container.Remove(item);
         }
     }
 

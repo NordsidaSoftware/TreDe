@@ -44,6 +44,7 @@
     <Compile Include="GameObjects\Actors\Actor.cs" />
     <Compile Include="GameObjects\GameObject.cs" />
     <Compile Include="Components\Component.cs" />
+    <Compile Include="GameObjects\Items\Axe.cs" />
     <Compile Include="GameObjects\Items\Bucket.cs" />
     <Compile Include="GameObjects\Items\Item.cs" />
     <Compile Include="GameObjects\Items\Pile.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="Render\ItemManagerRenderer.cs" />
     <Compile Include="Render\PlayStateRender.cs" />
     <Compile Include="States\ItemManagerState.cs" />
+    <Compile Include="States\ContainerManagerState.cs" />
     <Compile Include="States\SplashScreenState.cs" />
     <Compile Include="Utils\FPS.cs" />
     <Compile Include="World\MapReader.cs" />

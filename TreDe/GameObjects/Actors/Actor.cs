@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace TreDe
@@ -58,16 +59,39 @@ namespace TreDe
         public void PickupItem()
         {
             // 1.Check if tile contains an Item
-            if (GOmanager.IsItemAt(position.X, position.Y, position.Z)){
+            if (GOmanager.IsItemAt(position.X, position.Y, position.Z))
+            {
+                // 2. If item is a pile enter new container manager state :
+                if (GOmanager.GetItemAt(position.X, position.Y, position.Z) is Pile p)
+                {
+                    GOmanager.playState.Manager.Push(new ContainerManagerState(this, p));
+                    return;  //<--- break from method here
+                }
+                // 3. if item is a container and not emptym enter new container manager state:
+                if (GOmanager.GetItemAt(position.X, position.Y, position.Z) is IContainer c)
+                {
+                    if (!c.isEmpty())
+                    {
+                        GOmanager.playState.Manager.Push(new ContainerManagerState(this, c));
+                        return;  // <--- break from method here
+                    }
+                }
 
-                // 2. Pickup item, move to inventory, remove from ItemGrid
+                // 4. Pickup item, move to inventory, remove from ItemGrid
                 // need more advanced algorithm to sort out what to to do.
                 Inventory.Add(GOmanager.GetItemAt(position.X, position.Y, position.Z));
-                GOmanager.RemoveItemAt(position);
+                GOmanager.RemoveItemFromTerrain(position);
+
             }
 
         }
 
+        internal void DropItem(Item selected)
+        {
+            selected.position = position;
+            GOmanager.DropItemOnTerrain(selected);
+            Inventory.Remove(selected);
+        }
         public override string ToString()
         {
             return Name;
@@ -77,5 +101,6 @@ namespace TreDe
         {
             base.Update(gameTime);
         }
+
     }
 }
