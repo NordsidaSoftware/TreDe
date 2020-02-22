@@ -4,14 +4,18 @@ using System.Collections.Generic;
 
 namespace TreDe
 {
+    /// <summary>
+    /// Actor inherits from GameObject. Fields : Inventory.
+    /// </summary>
     public class Actor : GameObject
     {
         public List<Item> Inventory;
         public Actor(GameObjectManager GOmanager, Point3 position) : base(GOmanager)
         {
             this.position = position;
-            this.Glyph = 1;
-            Name = "NPC";
+            Glyph = 1;
+            color = Color.LimeGreen;
+            Name = "Name not initialized";
             Inventory = new List<Item>();
         }
 
@@ -64,15 +68,15 @@ namespace TreDe
                 // 2. If item is a pile enter new container manager state :
                 if (GOmanager.GetItemAt(position.X, position.Y, position.Z) is Pile p)
                 {
-                    GOmanager.playState.Manager.Push(new ContainerManagerState(this, p));
+                    GOmanager.playState.Manager.Push(new PileManagerState(this, p));
                     return;  //<--- break from method here
                 }
-                // 3. if item is a container and not emptym enter new container manager state:
-                if (GOmanager.GetItemAt(position.X, position.Y, position.Z) is IContainer c)
+                // 3. if item is a pile and not empty enter new pile manager state:
+                if (GOmanager.GetItemAt(position.X, position.Y, position.Z) is Pile pile)
                 {
-                    if (!c.isEmpty())
+                    if (!pile.IsEmpty())
                     {
-                        GOmanager.playState.Manager.Push(new ContainerManagerState(this, c));
+                        GOmanager.playState.Manager.Push(new PileManagerState(this, pile));
                         return;  // <--- break from method here
                     }
                 }
@@ -86,11 +90,16 @@ namespace TreDe
 
         }
 
+
         internal void DropItem(Item selected)
         {
             selected.position = position;
             GOmanager.DropItemOnTerrain(selected);
             Inventory.Remove(selected);
+        }
+        internal void Wield(Weapon weapon)
+        {
+            weapon.Wield();
         }
         public override string ToString()
         {

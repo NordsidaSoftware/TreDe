@@ -3,6 +3,11 @@ using System.Collections.Generic;
 
 namespace TreDe
 {
+/// <summary>
+/// The base class for Items and Actors
+/// Fields : position, glyph, color and name
+/// Contains a component system
+/// </summary>
     public class GameObject
     {
         public GameObjectManager GOmanager;
@@ -17,10 +22,6 @@ namespace TreDe
             this.GOmanager = GOmanager;
             GOmanager.playState.HappeningEvent += FireEvent;
             Components = new List<Component>();
-
-            color = Color.Red;
-            position = new Point3(10, 10, 4);
-            Glyph = 45;
         }
 
 
@@ -42,8 +43,7 @@ namespace TreDe
             return null;
         }
 
-        public virtual void Update(GameTime gameTime)
-        { }
+        public virtual void Update(GameTime gameTime) { }
 
         public override string ToString()
         {

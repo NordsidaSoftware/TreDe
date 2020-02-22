@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 namespace TreDe
 {
-    public class Axe : Item, IWield
+    public class Weapon : Item, IWield
     {
         bool wielded;
-        public Axe(GameObjectManager GOmanager, Point3 position) : base(GOmanager)
+        public Weapon(GameObjectManager GOmanager, Point3 position) : base(GOmanager)
         {
-            Name = "Axe";
-            Glyph = 34;
+            Name = "Weapon not initialized";
+            Glyph = 'x';
+            color = Color.Red;
             this.position = position;
         }
 
@@ -32,19 +28,24 @@ namespace TreDe
             base.Update(gameTime);
         }
 
-        void IWield.Attack()
+        public void Attack()
         {
             
         }
 
-        void IWield.Unwield()
+       public void Unwield()
         {
             wielded = false;
         }
 
-        void IWield.Wield()
+       public void Wield()
         {
             wielded = true;
+        }
+
+        public bool Wielded()
+        {
+            return wielded;
         }
     }
 }

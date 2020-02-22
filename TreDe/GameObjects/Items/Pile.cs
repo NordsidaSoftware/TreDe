@@ -1,13 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace TreDe
 {
-    public class Pile : Item, IContainer
+    /// <summary>
+    /// A special Item called a pile for more than one item on same grid
+    /// </summary>
+    public class Pile : Item
     {
         public List<Item> Container;
         public Pile(GameObjectManager GOmanager, Point3 position) : base(GOmanager)
         {
             Name = "Pile";
+            Glyph = 239;
+            color = Color.SaddleBrown;
             this.position = position;
             Container = new List<Item>();
         }
@@ -32,28 +38,28 @@ namespace TreDe
         }
 
 
-        void IContainer.Add(Item i)
+        public void Add(Item i)
         {
             Container.Add(i);
         }
 
 
-        List<Item> IContainer.GetItems()
+        public List<Item> GetItems()
         {
             return Container;
         }
 
-        bool IContainer.isEmpty()
+        public bool IsEmpty()
         {
             return Container.Count == 0;
         }
 
-        bool IContainer.IsFull()
+        public int AmountInPile()
         {
-            return false; // <--- infinite pile...
+            return Container.Count;
         }
 
-        void IContainer.RemoveItem(Item item)
+        public void RemoveItem(Item item)
         {
             Container.Remove(item);
         }

@@ -9,7 +9,7 @@ namespace TreDe
         public Player(GameObjectManager GOmanager, Point3 position) 
                                               : base(GOmanager, position)
         {
-         
+            Name = "Hiero Protagonist";
             color = Color.Yellow;
             Glyph = 2;
         }

@@ -9,23 +9,19 @@ namespace TreDe
     /// State for picking items from a container
     /// input  : actor and IContainer
     /// </summary>
-    internal class ContainerManagerState : State
+    internal class PileManagerState : State
     {
         Actor actor;
-        IContainer container;
+        Pile pile;
         private int index;
         ItemManagerRenderer renderer;
         InputHandler input;
 
-        private Item selected;
 
-
-
-
-        public ContainerManagerState(Actor actor, IContainer container)
+        public PileManagerState(Actor actor, Pile pile)
         {
             this.actor = actor;
-            this.container = container;
+            this.pile = pile;
         }
 
         public override void OnEnter()
@@ -48,22 +44,23 @@ namespace TreDe
         {
 
             if (input.WasKeyPressed(Keys.Up)) { index--; { if (index < 0) { index = 0; } } }
-            if (input.WasKeyPressed(Keys.Down)) { index++; { if (index > container.GetItems().Count - 1) { index = container.GetItems().Count - 1; } } }
-            if (input.WasKeyPressed(Keys.Enter)) { if (container.GetItems().Count > 0) ChooseItem(container.GetItems()[index]); }
+            if (input.WasKeyPressed(Keys.Down)) { index++; { if (index > pile.AmountInPile() - 1) { index = pile.AmountInPile() - 1; } } }
+            if (input.WasKeyPressed(Keys.Enter)) { if (pile.AmountInPile() > 0) ChooseItem(pile.GetItems()[index]); }
             if (input.WasKeyPressed(Keys.Escape)) { CheckForEmptyPile(); Manager.Pop(); } // <-- Must be last call!
 
         }
 
         private void CheckForEmptyPile()
         {
-            if (container.isEmpty()) { actor.GOmanager.RemoveItemFromTerrain(actor.position); }
+            if (pile.IsEmpty()) { actor.GOmanager.RemoveItemFromTerrain(actor.position); }
+            
         }
 
         private void ChooseItem(Item item)
         {
             actor.Inventory.Add(item);
 
-            container.RemoveItem(item);
+            pile.RemoveItem(item);
            
         }
 
@@ -74,11 +71,11 @@ namespace TreDe
 
 
             renderer.display.WriteLine("=== Pile ===", Color.Yellow);
-            for (int i = 0; i < container.GetItems().Count; i++)
+            for (int i = 0; i < pile.AmountInPile(); i++)
             {
                 if (i == index) { c = Color.Red; }
                 else { c = Color.White; }
-                renderer.display.WriteLine(container.GetItems()[i].ToString(), c);
+                renderer.display.WriteLine(pile.GetItems()[i].ToString(), c);
             }
 
             renderer.Draw(spriteBatch);
