@@ -2,7 +2,7 @@
 
 namespace TreDe
 {
-    public interface IContainer { void Add(Item i); bool IsFull(); bool isEmpty();  List<Item> GetItems(); void RemoveItem(Item item); }
+    public interface IContainer { void Add(Item i); bool IsFull(); bool isEmpty();  List<Item> GetItems(); void RemoveItem(Item item); void SetCapacity(int Capacity); }
     public interface IWield { void Wield(); void Unwield(); void Attack(); bool Wielded(); }
 
     /// <summary>

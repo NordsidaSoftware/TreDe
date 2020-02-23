@@ -35,16 +35,20 @@ namespace TreDe
             ItemDictionary = new Dictionary<int, Item>();
            
             // BSP OR WHAT ???¤%?¤%?
-            for (int i = 0; i < 100; i++)
+            // A simple grid containing ids
+            // Setup of a couple of items :
+            
+            for (int a = 0; a < 100; a++)
             {
-                Bucket b = new Bucket(this, new Point3(rnd.Next(0, 100), rnd.Next(0,100), 0));
-                DropItemOnTerrain(b);
-            }
+                
+                Item i = LoadItemBlueprint.Load("AXE", this);
+                i.position = new Point3(rnd.Next(0, 100), rnd.Next(0, 100), 0);
+                DropItemOnTerrain(i);
 
-            for (int i = 0; i < 100; i++)
-            {
-                Weapon w = new Weapon(this, new Point3(rnd.Next(0, 100), rnd.Next(0, 100), 0));
-                DropItemOnTerrain(w);
+                
+               Item b = LoadItemBlueprint.Load("BAG", this);
+                b.position = new Point3(rnd.Next(0, 100), rnd.Next(0, 100), 0);
+                DropItemOnTerrain(b);
             }
 
 

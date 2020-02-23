@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using TreDe.TextFileParser;
 
 namespace TreDe
 {
@@ -30,9 +31,7 @@ namespace TreDe
         /// </summary>
         protected override void Initialize()
         {
-          //  testRenderer = new TestRenderer(this);
-           // Components.Add(testRenderer);
-
+            ReadFromRaw.Read();
             fps = new FPS(this);
 
             settings = new Settings();

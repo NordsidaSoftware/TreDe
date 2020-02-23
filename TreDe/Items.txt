@@ -1,0 +1,8 @@
+
+
+ITEM [
+TAG : WEAPON
+NAME : oks
+GLYPH : ABC 
+COLOR : RED 
+END]

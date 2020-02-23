@@ -5,12 +5,11 @@ namespace TreDe
     public class Weapon : Item, IWield
     {
         bool wielded;
-        public Weapon(GameObjectManager GOmanager, Point3 position) : base(GOmanager)
+        public Weapon(GameObjectManager GOmanager) : base(GOmanager)
         {
             Name = "Weapon not initialized";
             Glyph = 'x';
             color = Color.Red;
-            this.position = position;
         }
 
         public override void FireEvent(object sender, HappeningArgs args)

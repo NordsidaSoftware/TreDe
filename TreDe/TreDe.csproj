@@ -46,9 +46,10 @@
     <Compile Include="GameObjects\GameObject.cs" />
     <Compile Include="Components\Component.cs" />
     <Compile Include="GameObjects\Items\Weapon.cs" />
-    <Compile Include="GameObjects\Items\Bucket.cs" />
+    <Compile Include="GameObjects\Items\Container.cs" />
     <Compile Include="GameObjects\Items\Item.cs" />
     <Compile Include="GameObjects\Items\Pile.cs" />
+    <Compile Include="GameObjects\Items\LoadItemBlueprint.cs" />
     <Compile Include="HappeningArgs.cs" />
     <Compile Include="GameObjects\GameObjectManager.cs" />
     <Compile Include="Render\Display.cs" />
@@ -57,6 +58,11 @@
     <Compile Include="States\ItemManagerState.cs" />
     <Compile Include="States\PileManagerState.cs" />
     <Compile Include="States\SplashScreenState.cs" />
+    <Compile Include="TextFileParser\ItemDescription.cs" />
+    <Compile Include="TextFileParser\Lexer.cs" />
+    <Compile Include="TextFileParser\Parser.cs" />
+    <Compile Include="TextFileParser\ReadFromRaw.cs" />
+    <Compile Include="TextFileParser\Token.cs" />
     <Compile Include="Utils\FPS.cs" />
     <Compile Include="World\MapReader.cs" />
     <Compile Include="Render\TileManager.cs" />

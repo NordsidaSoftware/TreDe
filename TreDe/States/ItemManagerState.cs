@@ -108,8 +108,11 @@ namespace TreDe
             {
                 if (selected != c)
                 {
-                    c.Add(selected);
-                    actor.Inventory.Remove(selected);
+                    if (!c.IsFull())
+                    {
+                        c.Add(selected);
+                        actor.Inventory.Remove(selected);
+                    }
                 }
             }
             SwitchDisplayState(InventoryState.InventoryDisplay);
