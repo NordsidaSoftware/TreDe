@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace TreDe.TextFileParser
 {
@@ -12,13 +10,16 @@ namespace TreDe.TextFileParser
         public static void Read()
         {
             string filename = @"C: \Users\kroll\source\repos\TreDe\TreDe\Items.txt";
-            string source = File.ReadAllText(filename);
+            string[] rawsource = File.ReadAllLines(filename);
+            StringBuilder source = new StringBuilder();
+            // strip all full line comments from source :
+            foreach (string s in rawsource)
+            { if (!s.Trim().StartsWith("#")) { source.Append(s); } }
 
-
-            Lexer l = new Lexer(source);
+            Lexer l = new Lexer(source.ToString());
 
             Parser p = new Parser(l);
-            ItemDescription IDesc = p.Run();
+            List<ItemDescription> ID = p.ReadSource();
 
         }
     }

@@ -1,8 +1,13 @@
+# comment
+# comment 2
 
-
+# comment 3 after a newline
 ITEM [
-TAG : WEAPON
-NAME : oks
-GLYPH : ABC 
-COLOR : RED 
-END]
+	TAG  : WEAPON
+        NAME  : "En liten oks"
+	GLYPH : 54
+	COLOR : (100 100 100)
+	UNWIELDY
+     ]
+# comment line before EOF
+

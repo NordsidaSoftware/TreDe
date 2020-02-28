@@ -11,6 +11,7 @@ namespace TreDe.TextFileParser
         int position;
         int nextPosition;
         string source;
+        int line;
 
         Dictionary<string, Token> KeywordDictionary;
 
@@ -22,19 +23,19 @@ namespace TreDe.TextFileParser
             this.source = source;
             KeywordDictionary = new Dictionary<string, Token>()
             {
-                { "ITEM", new Token(TokenType.Item, "item")},
-                { "END", new Token(TokenType.End, "end") },
-                {"GLYPH", new Token(TokenType.Glyph, "glyph") },
-                {"COLOR", new Token(TokenType.Color, "color") },
-                {"NAME", new Token(TokenType.Name, "name") },
-                {"TAG", new Token(TokenType.Tag, "tag") }
+                { "ITEM", new Token(TokenType.Item,  "item")},
+                {"GLYPH", new Token(TokenType.Glyph,  "glyph") },
+                {"COLOR", new Token(TokenType.Color,  "color") },
+                {"NAME",  new Token(TokenType.Name,   "name") },
+                {"TAG",   new Token(TokenType.Tag,    "tag") },
+                {"UNWIELDY", new Token(TokenType.Unwieldy, "unwieldy") }
             };
 
         }
         public Token NextToken()
         {
             Advance();
-            if (ch == '#') { ReadCommentLine(); NextToken(); }
+            if (EOF) { return new Token(TokenType.EOF, "eof"); }
             if (IsWhiteSpace(ch)) { ReadWhiteSpace(); }
             switch(ch)
             {
@@ -43,8 +44,43 @@ namespace TreDe.TextFileParser
                 case ':': return new Token(TokenType.Colon, ch.ToString());
             }
             if (IsLetter(ch)) { return (RegisterWorld( ReadWord())); }
+            if (IsNumber(ch)) { return (ReadNumber()); }
+            if (ch == '"' ) { return (ReadLiteral()); }
+            if (ch == '(') {  return ReadGrouping(); }
             
             return new Token(TokenType.Unknown, ch.ToString());
+        }
+
+        private Token ReadGrouping()
+        {
+            StringBuilder sb = new StringBuilder();
+            do
+            {
+                sb.Append(ch);
+                Advance();
+
+            }
+            while (ch != ')');
+            sb.Append(ch);
+            Advance();
+
+            return new Token(TokenType.Grouping, sb.ToString());
+        }
+
+        private Token ReadLiteral()
+        {
+            StringBuilder sb = new StringBuilder();
+            do
+            {
+                sb.Append(ch);
+                Advance();
+               
+            }
+            while (ch != '"');
+            sb.Append(ch);
+            Advance();
+
+            return new Token(TokenType.String, sb.ToString());
         }
 
         private Token RegisterWorld(string keyword)
@@ -52,12 +88,20 @@ namespace TreDe.TextFileParser
             if (KeywordDictionary.ContainsKey(keyword)){
                 return KeywordDictionary[keyword];
             }
-            return new Token(TokenType.Identifier, keyword);
+            return new Token(TokenType.Word, keyword);
         }
 
-        private void ReadCommentLine()
+        private Token ReadNumber()
         {
-            while (ch != '\n') { Advance(); }
+            StringBuilder sb = new StringBuilder();
+            do
+            {
+                sb.Append(ch.ToString());
+                Advance();
+            } while (IsNumber(ch));
+            Backtrack();
+
+            return new Token(TokenType.Number, sb.ToString());
         }
 
         private bool IsLetter(char ch)
@@ -65,9 +109,16 @@ namespace TreDe.TextFileParser
             if (ch >= 'A' && ch <= 'Z' || ch >= 'a' && ch <= 'z') { return true; }
             else { return false; }
         }
+
+        private bool IsNumber(char ch)
+        {
+            // if (ch >= 0 && ch <= 9) { return true; }
+            // else { return false; }
+            return char.IsNumber(ch);
+        }
         private bool IsWhiteSpace(char ch)
         {
-            if (ch == ' ' || ch == '\n' || ch == '\r') { return true; }
+            if (ch == ' ' || ch == '\n' || ch == '\r' || ch == '\t') { return true; }
             else { return false; }
         }
 

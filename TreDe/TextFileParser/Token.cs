@@ -12,10 +12,41 @@
         }
         public override string ToString()
         {
-            return ("< " + TokenType.ToString() + " - " + Literal + " >");
+            return (TokenType.ToString().ToUpper() + " ( " + Literal + " )");
         }
     }
 
-    public enum TokenType { Left_Bracket, Right_Bracket, Colon, Identifier,
-                            Item, End, Color, Glyph, Name, Tag, Unknown }
+    public enum TokenType
+    {
+        // single character tokens
+        Left_Bracket,
+        Right_Bracket,
+        Left_Paren,
+        Right_Paren,
+        Colon,
+        Quotation, 
+        Aphostrophe,
+
+        // literals
+        Number,
+        Grouping,
+        Word,
+        String,
+
+        // assignements
+        Item, 
+        Tag, 
+        Name, 
+        Color, 
+        Glyph,
+
+        // flags
+
+        Unwieldy,
+
+
+        // other
+        Unknown,
+        EOF
+    }
 }
