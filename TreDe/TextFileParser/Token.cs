@@ -47,6 +47,12 @@
 
         // other
         Unknown,
-        EOF
+        EOF,
+        Weapon,
+        Edge,
+        One_hand,
+        Cut,
+        Unbalanced,
+        Axe
     }
 }

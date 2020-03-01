@@ -1,13 +1,22 @@
-# comment
-# comment 2
+# comment lines are ignored
 
-# comment 3 after a newline
-ITEM [
-	TAG  : WEAPON
-        NAME  : "En liten oks"
-	GLYPH : 54
-	COLOR : (100 100 100)
-	UNWIELDY
-     ]
-# comment line before EOF
+# weapons are defined by the tag WEAPON. the different attacks are defined by the area of potential penetration
+# in mm
 
+[
+WEAPON 
+EDGE : 100, 100
+BLUNT : 50, 10
+NAME : oks
+GLYPH : 34
+COLOR : 100, 100, 50
+]
+
+# container items are defined by the tag CONTAINER and the capacity in litres
+[
+CONTAINER 
+CAPACITY : 60
+NAME : En sekk av strie
+GLYPH : 69
+COLOR : 10, 200, 50
+]

@@ -27,8 +27,13 @@ namespace TreDe.TextFileParser
                 {"GLYPH", new Token(TokenType.Glyph,  "glyph") },
                 {"COLOR", new Token(TokenType.Color,  "color") },
                 {"NAME",  new Token(TokenType.Name,   "name") },
-                {"TAG",   new Token(TokenType.Tag,    "tag") },
-                {"UNWIELDY", new Token(TokenType.Unwieldy, "unwieldy") }
+                {"WEAPON", new Token(TokenType.Weapon, "weapon") },
+                {"EDGE", new Token(TokenType.Edge, "edge") },
+                {"ONE_HAND", new Token(TokenType.One_hand, "one_hand") },
+                {"CUT", new Token(TokenType.Cut, "cut") },
+                {"UNBALANCED", new Token(TokenType.Unbalanced, "unbalanced") },
+                {"UNWIELDY", new Token(TokenType.Unwieldy, "unwieldy") },
+                {"AXE", new Token(TokenType.Axe, "axe") }
             };
 
         }

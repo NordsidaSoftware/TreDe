@@ -1,36 +1,29 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TreDe
 {
+    
     public static class LoadItemBlueprint
     {
-        public static Item Load(string type, GameObjectManager GOmanager)
+       public static Item LoadItem(string search)
         {
-            switch (type)
+            foreach (Item i in ReadFromRaw.itemList)
             {
-                case "AXE": { return LoadWeapon(GOmanager); }
-                case "BAG": { return LoadContainer(GOmanager); }
-
+                if (i.Name == search)
+                {
+                    Item item = new Item(i.GOmanager);
+                    int id = item.ID;
+                    item = i;
+                    item.ID = id;
+                    return item;
+                }
             }
-            return new Item(GOmanager) { Name = "ERROR ITEM NOT INITIALIZED..." };
-        }
-        static Item LoadWeapon(GameObjectManager GOManager)
-        {
-            Weapon w = new Weapon(GOManager);
-            w.Glyph = 'x';
-            w.color = Color.Red;
-            w.Name = "En ganske liten øks";
-            return w;
-        }
-        static Item LoadContainer(GameObjectManager GOManager)
-        {
-
-            Container c = new Container(GOManager);
-            c.Glyph = 34;
-            c.color = Color.Brown;
-            c.Name = "En sekk av strie";
-            return c;
+            return null;
         }
     }
+
+      
 }

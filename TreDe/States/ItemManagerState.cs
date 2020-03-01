@@ -13,12 +13,13 @@ namespace TreDe
     internal class ItemManagerState : State
     {
         Actor actor;
-        private int index;
         ItemManagerRenderer renderer;
         InputHandler input;
         private InventoryState displayState;
+
+        private int index;
         private Item selected;
-        private IContainer selectedContainer;
+        private Item selectedContainer;
         
         private Dictionary<int, Choice> InteractionChoices;
         private List<Item> ContainerList;
@@ -77,14 +78,14 @@ namespace TreDe
                         SwitchDisplayState(InventoryState.InventoryDisplay);
                         break;
                     }
-                case "wield": { actor.Wield((Weapon)selected); break; }
+                case "wield": { actor.Wield(selected); break; }
                 case "remove": { SelectContainerToManipulate(); break; }
             }
         }
 
         private void SelectContainerToManipulate()
         {
-            selectedContainer = (IContainer)selected;
+            selectedContainer = selected;
             SwitchDisplayState(InventoryState.ContainerExitDisplay);
         }
 
@@ -93,9 +94,10 @@ namespace TreDe
             ContainerList.Clear();
             foreach (Item item in actor.Inventory )
             {
-                if (item is IContainer c)
+                if (item.GetComponent(TypeOfComponent.CONTAINER) != null)
                 {
-                    if (!c.IsFull() && c != selected)
+                    ContainerComponent cc = (ContainerComponent)item.GetComponent(TypeOfComponent.CONTAINER);
+                    if (!cc.IsFull && item != selected)
                     ContainerList.Add(item);
                 }
             }
@@ -104,13 +106,14 @@ namespace TreDe
         }
         private void PutIntoContainer(int index)
         {
-            if (ContainerList[index] is IContainer c)
+            if (ContainerList[index].GetComponent(TypeOfComponent.CONTAINER )!= null)
             {
-                if (selected != c)
+                ContainerComponent cc = (ContainerComponent)ContainerList[index].GetComponent(TypeOfComponent.CONTAINER);
+                if (selected != ContainerList[index])
                 {
-                    if (!c.IsFull())
+                    if (!cc.IsFull)
                     {
-                        c.Add(selected);
+                        cc.Contains.Add(selected);
                         actor.Inventory.Remove(selected);
                     }
                 }
@@ -126,13 +129,14 @@ namespace TreDe
             InteractionChoices.Add(i++, new Choice() { text = "Drop", keyword = "drop" });
             InteractionChoices.Add(i++, new Choice() { text = "Put in container", keyword = "put" });
 
-            if (selected is IWield w)
+            if (selected.GetComponent(TypeOfComponent.WEAPON) != null)
             {
                 InteractionChoices.Add(i++, new Choice() { text = "Wield", keyword = "wield" });
             }
-            if (selected is IContainer c)
+            if (selected.GetComponent(TypeOfComponent.CONTAINER) != null)
             {
-                if (!c.isEmpty())
+                ContainerComponent cc = (ContainerComponent)selected.GetComponent(TypeOfComponent.CONTAINER);
+                if (!cc.IsEmpty)
                 InteractionChoices.Add(i++, new Choice() { text = "Remove item", keyword = "remove" });
             }
 
@@ -141,9 +145,10 @@ namespace TreDe
         }
         private void RemoveFromContainer(int index)
         {
-            actor.Inventory.Add(selectedContainer.GetItems()[index]);
-            selectedContainer.RemoveItem(selectedContainer.GetItems()[index]);
-            if (selectedContainer.isEmpty())
+            ContainerComponent cc = (ContainerComponent)selectedContainer.GetComponent(TypeOfComponent.CONTAINER);
+            actor.Inventory.Add(cc.GetItems[index]);
+            cc.Contains.Remove(cc.GetItems[index]);
+            if (cc.IsEmpty)
             { SwitchDisplayState(InventoryState.InventoryDisplay); }
         }
 
@@ -179,7 +184,7 @@ namespace TreDe
                 case InventoryState.ContainerExitDisplay:
                     {
                         if (input.WasKeyPressed(Keys.Up)) { index--; { if (index < 0) { index = 0; } } }
-                        if (input.WasKeyPressed(Keys.Down)) { index++; { if (index > selectedContainer.GetItems().Count - 1) { index = selectedContainer.GetItems().Count - 1; } } }
+                        if (input.WasKeyPressed(Keys.Down)) { index++; }  // TODO : max inventory for selected container
                         if (input.WasKeyPressed(Keys.Enter)) { RemoveFromContainer(index); }
                         if (input.WasKeyPressed(Keys.Escape)) { SwitchDisplayState(InventoryState.InventoryDisplay); }
                         break;
@@ -209,16 +214,17 @@ namespace TreDe
                     }
                 case InventoryState.ItemInteraction:
                     {
-                        renderer.display.WriteLine("=== ITEM DISPLAY ===", Color.Yellow);
+                        renderer.display.WriteLine("===   I T E M   ===", Color.Yellow);
                         renderer.display.WriteLine(" ");
-                        renderer.display.Write(selected.ToString());
-                        
-                        if (selected is Weapon w)
+                        renderer.display.WriteLine(selected.ToString().PadLeft(5));
+                        renderer.display.WriteLine("-----------------------");
+
+                        if (selected.GetComponent(TypeOfComponent.WEAPON)!= null)
                         {
-                            renderer.display.Write("Wielded :     ");
-                            renderer.display.Write(w.Wielded().ToString());
+                            WeaponComponent wc = (WeaponComponent)selected.GetComponent(TypeOfComponent.WEAPON);
+                            renderer.display.WriteLine("Wielded : " + wc.wielded.ToString());
                         }
-                        renderer.display.WriteLine("");
+                        renderer.display.WriteLine("---------------------------");
 
                        for ( int i = 0; i < InteractionChoices.Count; i++)
                         {
@@ -246,13 +252,13 @@ namespace TreDe
                     {
                         renderer.display.WriteLine("=== ITEMS IN CONTAINER ===", Color.Yellow);
                         renderer.display.WriteLine(" ");
-
-                        for (int i = 0; i < selectedContainer.GetItems().Count; i++)
+                        ContainerComponent cc = (ContainerComponent)selectedContainer.GetComponent(TypeOfComponent.CONTAINER);
+                        for (int i = 0; i < cc.GetItems.Count; i++)
                         {
 
                             if (i == index) { c = Color.Red; }
                             else { c = Color.White; }
-                            renderer.display.WriteLine(selectedContainer.GetItems()[i].Name, c);
+                            renderer.display.WriteLine(cc.GetItems[i].Name, c);
                         }
                         break;
                     }

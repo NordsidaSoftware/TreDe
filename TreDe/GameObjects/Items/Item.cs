@@ -6,7 +6,7 @@ namespace TreDe
     public interface IWield { void Wield(); void Unwield(); void Attack(); bool Wielded(); }
 
     /// <summary>
-    /// Item is a GameObject with a unike Item ID.
+    /// Item is a GameObject with a unique Item ID.
     /// </summary>
     public class Item : GameObject
     {

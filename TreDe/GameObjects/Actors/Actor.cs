@@ -97,9 +97,13 @@ namespace TreDe
             GOmanager.DropItemOnTerrain(selected);
             Inventory.Remove(selected);
         }
-        internal void Wield(Weapon weapon)
+        internal void Wield(Item item)
         {
-            weapon.Wield();
+            if (item.GetComponent(TypeOfComponent.WEAPON)!= null)
+            {
+                WeaponComponent wc = (WeaponComponent)item.GetComponent(TypeOfComponent.WEAPON);
+                wc.wielded = !wc.wielded;
+            }
         }
         public override string ToString()
         {

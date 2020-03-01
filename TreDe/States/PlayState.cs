@@ -43,6 +43,8 @@ namespace TreDe
             Settings s = (Settings)Manager.Game.Services.GetService(typeof(ISettings));
             input = (InputHandler)Manager.Game.Services.GetService(typeof(IIhandler));
             GOmanager = new GameObjectManager(this);
+            ReadFromRaw.Read(GOmanager);
+            GOmanager.InitializeItems();
             PhysE = new PhysEngine(this);
 
             CameraPosition = Vector2.Zero;

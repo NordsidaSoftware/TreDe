@@ -7,6 +7,7 @@ namespace TreDe.TextFileParser
 {
     public static class ReadFromRaw
     {
+        public static List<ItemDescription> itemDescriptions = new List<ItemDescription>();
         public static void Read()
         {
             string filename = @"C: \Users\kroll\source\repos\TreDe\TreDe\Items.txt";
@@ -19,7 +20,7 @@ namespace TreDe.TextFileParser
             Lexer l = new Lexer(source.ToString());
 
             Parser p = new Parser(l);
-            List<ItemDescription> ID = p.ReadSource();
+            itemDescriptions = p.ReadSource();
 
         }
     }

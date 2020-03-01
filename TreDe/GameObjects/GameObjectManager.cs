@@ -25,6 +25,19 @@ namespace TreDe
         readonly Random rnd;
      
      
+        public void InitializeItems()
+        {
+            for (int a = 0; a < 100; a++)
+            {
+                Item i = LoadItemBlueprint.LoadItem("oks");
+                i.position = new Point3(rnd.Next(0, 100), rnd.Next(0, 100), 0);
+                DropItemOnTerrain(i);
+
+                Item j = LoadItemBlueprint.LoadItem("En sekk av strie");
+                j.position = new Point3(rnd.Next(0, 100), rnd.Next(0, 100), 0);
+                DropItemOnTerrain(j);
+            }
+        }
         public GameObjectManager(PlayState playState)
         {
             Settings s = (Settings)playState.Manager.Game.Services.GetService(typeof(ISettings));
@@ -34,23 +47,7 @@ namespace TreDe
             ItemGrid = new int[s.WorldWidth, s.WorldHeight, s.WorldDepth];
             ItemDictionary = new Dictionary<int, Item>();
            
-            // BSP OR WHAT ???¤%?¤%?
-            // A simple grid containing ids
-            // Setup of a couple of items :
-            
-            for (int a = 0; a < 100; a++)
-            {
-                
-                Item i = LoadItemBlueprint.Load("AXE", this);
-                i.position = new Point3(rnd.Next(0, 100), rnd.Next(0, 100), 0);
-                DropItemOnTerrain(i);
-
-                
-               Item b = LoadItemBlueprint.Load("BAG", this);
-                b.position = new Point3(rnd.Next(0, 100), rnd.Next(0, 100), 0);
-                DropItemOnTerrain(b);
-            }
-
+          
 
             ActorsGrid = new GameObject[s.WorldWidth, s.WorldHeight, s.WorldDepth];
             ActorsList = new List<Actor>();

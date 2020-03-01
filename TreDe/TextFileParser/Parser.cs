@@ -27,25 +27,60 @@ namespace TreDe.TextFileParser
 
         internal List<ItemDescription> ReadSource()
         {
-
             List<ItemDescription> ItemDescriptions = new List<ItemDescription>();
             StringBuilder sb = new StringBuilder();
             while (currentToken.TokenType != TokenType.EOF)
             {
                 switch (currentToken.TokenType)
                 {
-                    case TokenType.Item: { ItemDescriptions.Add(RecordItem()); break; }
+                    case TokenType.Weapon: { ReadWeaponSource() ; break; }
                 }
-              
                 Advance();
 
             }
             return ItemDescriptions;
-               
-            
-           
 
-            
+            void ReadWeaponSource(){
+                Weapon w = new Weapon(null);
+                Advance();
+                Expect(TokenType.Left_Bracket);
+                while (currentToken.TokenType != TokenType.Right_Bracket)
+                {
+                    if (nextToken.TokenType == TokenType.Colon)
+                    {
+                        switch (currentToken.TokenType)
+                        {
+                            case TokenType.Name: ReadName(); break;
+                            case TokenType.Glyph: ReadGlyph(); break;
+                            case TokenType.Color: ReadColor(); break;
+                            case TokenType.Edge: ReadEdge(); break;
+                        }
+                    }
+
+                    else
+                    {
+                        switch(currentToken.TokenType)
+                        {
+                            case TokenType.Axe: w.Components.Add(new Component(TypeOfComponent.PHYSIC, w));break;
+                            
+                        }
+                    }
+                    Advance();
+                }
+                void ReadName()
+                {
+                    Advance();
+                    Expect(TokenType.Colon);
+                    w.Name = currentToken.Literal;
+                }
+
+                void ReadGlyph()
+                {
+                    Advance();
+                    Expect(TokenType.Colon);
+                    w.Glyph = Convert.ToInt32(currentToken.Literal);
+                }
+
             ItemDescription RecordItem()
             {
                 ItemDescription itemDescription = new ItemDescription();
@@ -58,24 +93,21 @@ namespace TreDe.TextFileParser
                     // expression can be <word> <number> <string> <grouping>
                     if (nextToken.TokenType == TokenType.Colon)
                     {
-                        AssignmentStatement AS = new AssignmentStatement();
-                        AS.Assignment = currentToken;
+                        string assignment = currentToken.Literal;
                         Advance();
                         Expect(TokenType.Colon);
-                        AS.Expr = ReadExpression();
+                        Token expression = currentToken;
                         Advance();
 
-                        itemDescription.statements.Add(AS);
+                        itemDescription.assignments[assignment] = expression;
                     }
                     else
                     {
-                        FlagStatement FS = new FlagStatement();
-                        FS.Flag = currentToken;
+                        string Flag = currentToken.Literal;
                         Advance();
-                        itemDescription.statements.Add(FS);
+                        itemDescription.flags.Add(Flag);
                     }
                 }
-
                 return itemDescription;
             }
 
@@ -85,20 +117,6 @@ namespace TreDe.TextFileParser
                 else throw new Exception("PARSE ERROR : Expected " + token.ToString() +
                     " Got " + currentToken.ToString());
             }
-
-            Expression ReadExpression()
-            {
-                switch (currentToken.TokenType)
-                {
-                    case TokenType.Word: return new Literal(currentToken);
-                    case TokenType.Number:return new Literal(currentToken);
-                    case TokenType.String:return new Literal(currentToken);
-                    case TokenType.Grouping:return new Literal(currentToken);
-                }
-
-                return new Expression();
-            }
         }
-
     }
 }
