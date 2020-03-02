@@ -89,22 +89,19 @@ namespace TreDe
         public static Structure WallStruct = new Structure()
         {
             tiles = new TileType[]{TileType.Wall, TileType.Wall,
-            TileType.Wall, TileType.Wall, TileType.Wall, TileType.Wall, TileType.Wall,
-            TileType.Wall}
+            TileType.Wall, TileType.Wall, TileType.Wall}
         };
 
         public static Structure DoorClosedStruct = new Structure()
         {
             tiles = new TileType[]{TileType.DoorClosed, TileType.DoorClosed,
-            TileType.DoorClosed, TileType.DoorClosed, TileType.DoorClosed, TileType.DoorClosed, TileType.DoorClosed,
-            TileType.Wall}
+            TileType.DoorClosed, TileType.DoorClosed, TileType.DoorClosed}
         };
 
         public static Structure DoorOpenStruct = new Structure()
         {
             tiles = new TileType[]{TileType.DoorOpen, TileType.DoorOpen,
-            TileType.DoorOpen, TileType.DoorOpen, TileType.DoorOpen, TileType.DoorOpen, TileType.DoorOpen,
-            TileType.Wall}
+            TileType.DoorOpen, TileType.DoorOpen, TileType.DoorOpen}
         };
 
 

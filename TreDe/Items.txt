@@ -20,3 +20,16 @@ NAME : En sekk av strie
 GLYPH : 69
 COLOR : 10, 200, 50
 ]
+
+# an test item with rather conflicting tags, both a weapon and an container...
+[
+CONTAINER 
+CAPACITY : 60
+WEAPON
+EDGE : 5,5
+NAME : En rar greie
+GLYPH : 10
+COLOR : 100, 10, 200
+]
+
+

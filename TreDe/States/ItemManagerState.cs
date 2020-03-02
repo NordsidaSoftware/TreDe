@@ -207,8 +207,7 @@ namespace TreDe
                         {
                             if (i == index) { c = Color.Red; }
                             else { c = Color.White; }
-                            renderer.display.Write(actor.Inventory[i].ToString(), c);
-                            renderer.display.WriteLine("   " + actor.Inventory[i].Glyph.ToString());
+                            renderer.display.WriteLine(actor.Inventory[i].ToString(), c);
                         }
                         break;
                     }

@@ -45,8 +45,6 @@
     <Compile Include="GameObjects\Actors\LoadActorBlueprint.cs" />
     <Compile Include="GameObjects\GameObject.cs" />
     <Compile Include="Components\Component.cs" />
-    <Compile Include="GameObjects\Items\Weapon.cs" />
-    <Compile Include="GameObjects\Items\Container.cs" />
     <Compile Include="GameObjects\Items\Item.cs" />
     <Compile Include="GameObjects\Items\Pile.cs" />
     <Compile Include="GameObjects\Items\LoadItemBlueprint.cs" />
@@ -60,6 +58,8 @@
     <Compile Include="States\PileManagerState.cs" />
     <Compile Include="States\SplashScreenState.cs" />
     <Compile Include="Utils\FPS.cs" />
+    <Compile Include="Utils\Randomizer.cs" />
+    <Compile Include="World\Building.cs" />
     <Compile Include="World\MapReader.cs" />
     <Compile Include="Render\TileManager.cs" />
     <Compile Include="PhysEngine.cs" />
@@ -74,6 +74,7 @@
     <Compile Include="Render\Renderer.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="States\StateManager.cs" />
+    <Compile Include="World\WorldGen.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

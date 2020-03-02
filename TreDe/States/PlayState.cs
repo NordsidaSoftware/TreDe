@@ -1,12 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
 
 namespace TreDe
 {
-  
+
     public class PlayState : State
     {
 
@@ -56,12 +54,18 @@ namespace TreDe
             WorldHeight = s.WorldHeight;
             WorldDepth = s.WorldDepth;
             Terrain = new byte[WorldWidth, WorldHeight, WorldDepth];
+            WorldGen WG = new WorldGen(WorldWidth, WorldHeight, WorldDepth);
 
-            MapReader mr = new MapReader(WorldWidth, WorldHeight, WorldDepth);
+            for (int i = 0; i < 100; i++)
+            WG.GenerateRandomHouse(GOmanager.ActorsList[0]);
+
+
+            MapReader mr = new MapReader(WG);
+
             Terrain = mr.ReadMap();
 
             renderer = new PlayStateRender(Manager, this);
-        
+            
         }
 
         internal bool IsBlocked(int x, int y, int z)

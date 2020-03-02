@@ -1,13 +1,11 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace TreDe
 {
     /// <summary>
-    /// State for picking items from a container
-    /// input  : actor and IContainer
+    /// State for picking items from a pile
     /// </summary>
     internal class PileManagerState : State
     {

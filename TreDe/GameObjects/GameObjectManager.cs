@@ -36,6 +36,10 @@ namespace TreDe
                 Item j = LoadItemBlueprint.LoadItem("En sekk av strie");
                 j.position = new Point3(rnd.Next(0, 100), rnd.Next(0, 100), 0);
                 DropItemOnTerrain(j);
+
+                Item k = LoadItemBlueprint.LoadItem("En rar greie");
+                k.position = new Point3(rnd.Next(0, 100), rnd.Next(0, 100), 0);
+                DropItemOnTerrain(k);
             }
         }
         public GameObjectManager(PlayState playState)

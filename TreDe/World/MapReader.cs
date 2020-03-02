@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
+using TreDe.World;
 
 namespace TreDe
 {
@@ -11,14 +13,16 @@ namespace TreDe
         private int worldDepth;
         private byte[,,] Map;
 
-        public GameObjectManager GOManager;
+        private List<Building> buildings;
 
-        public MapReader(int worldWidth, int worldHeight, int worldDepth)
+        public MapReader(WorldGen WG)
         {
-            this.worldWidth = worldWidth;
-            this.worldHeight = worldHeight;
-            this.worldDepth = worldDepth;
+            this.worldWidth = WG.WorldWidth;
+            this.worldHeight = WG.WorldHeight;
+            this.worldDepth = WG.WorldDepth;
+
             Map = new byte[worldWidth, worldHeight, worldDepth];
+            buildings = WG.Buildings;
             
         }
 
@@ -46,20 +50,25 @@ namespace TreDe
                 var randY = rnd.Next(0, worldHeight);
 
                 AddStructure(randX, randY, "Tree");
-               
-           
             }
             
+            foreach (Building house in buildings)
+            {
+                foreach (Point p in RectangleExtension.Walls(house.Rectangle))
+                    AddStructure(p.X, p.Y, "HouseWall");
 
-            Rectangle house = new Rectangle(10, 10, 10, 10);
-            foreach (Point p in RectangleExtension.Walls(house))
-                AddStructure(p.X, p.Y, "HouseWall");
-
-            foreach (Point p in RectangleExtension.Area(house))
-                Map[p.X, p.Y, 0] = (byte)TileType.Empty;
-
-            AddStructure(15, 20, "DoorClosed");
+                foreach (Point p in RectangleExtension.Area(house.Rectangle))
+                    Map[p.X, p.Y, 0] = (byte)TileType.Empty;
+                
+                foreach (Point p in house.Doors)
+                    AddStructure(p.X, p.Y, "DoorClosed");
+            }
             
+            
+
+            
+
+           
 
             return Map;
         }

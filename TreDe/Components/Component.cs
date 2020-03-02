@@ -66,5 +66,14 @@ namespace TreDe
         {
             base.Execute(sender, args);
         }
+
+        public override string ToString()
+        {
+            if (Contains.Count > 0)
+            {
+                return " som inneholder " + Contains.Count.ToString() + " gjenstander";
+            }
+            else return "";
+        }
     }
 }
