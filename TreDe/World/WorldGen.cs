@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using TreDe.World;
 
 namespace TreDe
 {
@@ -17,7 +16,7 @@ namespace TreDe
             this.WorldDepth = WorldDepth;
         }
 
-        public bool GenerateRandomHouse(Actor Owner)
+        public bool GenerateRandomHouse()
         {
             int Width = Randomizer.rnd.Next(3, 10);
             int Height = Randomizer.rnd.Next(3, 10);
@@ -37,7 +36,7 @@ namespace TreDe
                 doors.Add(walls[Randomizer.rnd.Next(0, walls.Count - 1)]);
             }
 
-            Building b = new Building(Owner, rectangle, doors);
+            Building b = new Building(null, rectangle, doors);
             Buildings.Add(b);
             return true;
         }

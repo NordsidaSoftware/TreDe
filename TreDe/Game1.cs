@@ -38,8 +38,9 @@ namespace TreDe
             stateManager = new StateManager(this);
             Components.Add(stateManager);
 
-            PlayState ps = new PlayState();
-            stateManager.Push(ps);
+            // PlayState ps = new PlayState();
+            MainMenuState sss = new MainMenuState();
+            stateManager.Push(sss);
 
 
             base.Initialize();

@@ -14,7 +14,10 @@ namespace TreDe
         public static List<Item> itemList = new List<Item>();
         public static void Read(GameObjectManager GOmanager)
         {
-            string filename = @"C: \Users\kroll\source\repos\TreDe\TreDe\Items.txt";
+            //string filename = @"C: \Users\kroll\source\repos\TreDe\TreDe\Items.txt";
+            string filename = @"C:\Users\kroll\source\repos\TreDe\TreDe\Items.txt";
+
+
             string[] rawsource = File.ReadAllLines(filename);
             string[] scannedsource = Scan(rawsource);
             Dictionary<int, string[]> splitItems = SplitItems(scannedsource);

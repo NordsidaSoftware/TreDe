@@ -1,19 +1,18 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
 
 namespace TreDe
 {
     /// <summary>
-/// State for all inventory interactions
-/// input  : actor
-/// </summary>
+    /// State for all inventory interactions
+    /// input  : actor
+    /// </summary>
     internal class ItemManagerState : State
     {
         Actor actor;
-        ItemManagerRenderer renderer;
+        SingleScreenRender renderer;
         InputHandler input;
         private InventoryState displayState;
 
@@ -31,11 +30,7 @@ namespace TreDe
             ContainerEnterDisplay,
             ContainerExitDisplay
         };
-        internal struct Choice
-        {
-            internal string text;
-            internal string keyword;
-        }
+        
         public ItemManagerState(Actor actor)
         {
             this.actor = actor;
@@ -46,7 +41,7 @@ namespace TreDe
 
         public override void OnEnter()
         {
-            renderer = new ItemManagerRenderer(Manager);
+            renderer = new SingleScreenRender(Manager);
             input = (InputHandler)Manager.Game.Services.GetService(typeof(IIhandler));
 
             base.OnEnter();

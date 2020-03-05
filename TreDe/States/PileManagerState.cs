@@ -12,7 +12,7 @@ namespace TreDe
         Actor actor;
         Pile pile;
         private int index;
-        ItemManagerRenderer renderer;
+        SingleScreenRender renderer;
         InputHandler input;
 
 
@@ -24,7 +24,7 @@ namespace TreDe
 
         public override void OnEnter()
         {
-            renderer = new ItemManagerRenderer(Manager);
+            renderer = new SingleScreenRender(Manager);
             input = (InputHandler)Manager.Game.Services.GetService(typeof(IIhandler));
 
             base.OnEnter();

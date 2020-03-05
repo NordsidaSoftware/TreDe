@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
-namespace TreDe.World
+namespace TreDe
 {
     public class Building
     {

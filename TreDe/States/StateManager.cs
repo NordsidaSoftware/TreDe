@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace TreDe
@@ -29,8 +30,8 @@ namespace TreDe
         private Stack<State> StateStack;
 
         private bool IsNotEmpty { get { return StateStack.Count > 0; } }
-        public State currentState {  get { if (IsNotEmpty) return StateStack.Peek();
-                                           else return null; } }
+        public bool GameInProgress { get { return StateStack.Count > 1; } } // Stack[0] = MainMenu. 
+        
         public StateManager(Game game) : base(game)
         {
             StateStack = new Stack<State>();
@@ -48,7 +49,13 @@ namespace TreDe
                 StateStack.Peek().OnExit();
                 StateStack.Pop();
             }
-         
+        }
+
+        public State Peek() { return StateStack.Peek(); }
+
+        public void ClearStack()
+        {
+            StateStack.Clear();
         }
 
         public override void Update(GameTime gameTime)
@@ -67,5 +74,6 @@ namespace TreDe
                 StateStack.Peek().Draw(spriteBatch);
             }
         }
+
     }
 }

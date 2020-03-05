@@ -4,10 +4,8 @@ using Microsoft.Xna.Framework.Input;
 
 namespace TreDe
 {
-
     public class PlayState : State
     {
-
         int WorldWidth;
         int WorldHeight;
         int WorldDepth;
@@ -35,7 +33,7 @@ namespace TreDe
         }
         // %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-        
+      
         public override void OnEnter()
         {
             Settings s = (Settings)Manager.Game.Services.GetService(typeof(ISettings));
@@ -56,9 +54,17 @@ namespace TreDe
             Terrain = new byte[WorldWidth, WorldHeight, WorldDepth];
             WorldGen WG = new WorldGen(WorldWidth, WorldHeight, WorldDepth);
 
+            // Test make 100 random houses
             for (int i = 0; i < 100; i++)
-            WG.GenerateRandomHouse(GOmanager.ActorsList[0]);
-
+            {
+                WG.GenerateRandomHouse(); 
+            }
+            // populate the houses with an owner npc
+            foreach (Building b in WG.Buildings)
+            {
+                Actor a = GOmanager.CreateRandomNPC(b.Rectangle.Center.X, b.Rectangle.Center.Y, 0);
+                b.Owner = a;
+            }
 
             MapReader mr = new MapReader(WG);
 
@@ -107,9 +113,9 @@ namespace TreDe
  
         public override void Update(GameTime gameTime)
         {
-            if (input.WasKeyPressed(Keys.Enter))
+            if (input.WasKeyPressed(Keys.Escape))
             {
-                Manager.Pop();
+                Manager.Push(new MainMenuState());
             }
 
             if (input.WasKeyPressed(Keys.Up)) { GOmanager.player.Move(0, -1, 0); }

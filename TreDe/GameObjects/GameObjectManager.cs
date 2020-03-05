@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace TreDe
@@ -20,11 +19,11 @@ namespace TreDe
          * 
          * */
 
-        public int [,,] ItemGrid;
+        public int[,,] ItemGrid;
         public Dictionary<int, Item> ItemDictionary;
         readonly Random rnd;
-     
-     
+
+
         public void InitializeItems()
         {
             for (int a = 0; a < 100; a++)
@@ -50,24 +49,23 @@ namespace TreDe
 
             ItemGrid = new int[s.WorldWidth, s.WorldHeight, s.WorldDepth];
             ItemDictionary = new Dictionary<int, Item>();
-           
-          
+
+
 
             ActorsGrid = new GameObject[s.WorldWidth, s.WorldHeight, s.WorldDepth];
             ActorsList = new List<Actor>();
             player = new Player(this, new Point3(28, 9, 0));
             NewActor(player);
-
-            for (int i = 0; i < 100; i++) {
-                Actor actor = new Actor(this, new Point3(rnd.Next(0, 50),
-                                                         rnd.Next(0, 50),
-                                                                     0));
-                actor = LoadActorBlueprint.Load("NPC", actor);
-                NewActor(actor);
-            }
         }
 
-        
+        public Actor CreateRandomNPC(int x, int y, int z)
+        {
+            Actor actor = new Actor(this, new Point3(x, y, z));
+            actor = LoadActorBlueprint.Load("NPC", actor);
+            NewActor(actor);
+            return actor;
+        }
+
         public void DropItemOnTerrain(Item i) // ---> Drop 'i' on grid.
         {
             Item other = GetItemAt(i.position.X, i.position.Y, i.position.Z);
@@ -114,7 +112,7 @@ namespace TreDe
 
         internal bool IsItemAt(int x, int y, int z)
         {
-            if (ItemGrid[x,y,z] != 0) { return true; }
+            if (ItemGrid[x, y, z] != 0) { return true; }
             else { return false; }
         }
         internal Item GetItemAt(int x, int y, int z)
