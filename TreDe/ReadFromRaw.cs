@@ -9,10 +9,24 @@ namespace TreDe
     {
         WEAPON, CONTAINER
     }
+
+
+    // A struct that will store the data for the item read from the raw.
+    // all components will have owner set to null
+    public struct ItemPrefab
+    {
+        public string Name;
+        public int Glyph;
+        public int[] Color;
+
+        public List<Component> Components;
+    }
+
+
     public static class ReadFromRaw
     {
-        public static List<Item> itemList = new List<Item>();
-        public static void Read(GameObjectManager GOmanager)
+        public static List<ItemPrefab> itemList = new List<ItemPrefab>();
+        public static void Read()
         {
             //string filename = @"C: \Users\kroll\source\repos\TreDe\TreDe\Items.txt";
             string filename = @"C:\Users\kroll\source\repos\TreDe\TreDe\Items.txt";
@@ -22,16 +36,17 @@ namespace TreDe
             string[] scannedsource = Scan(rawsource);
             Dictionary<int, string[]> splitItems = SplitItems(scannedsource);
 
-            itemList = CreateItems(splitItems, GOmanager);
+            itemList = CreateItems(splitItems);
 
         }
 
-        private static List<Item> CreateItems(Dictionary<int, string[]> dict, GameObjectManager GOmanager)
+        private static List<ItemPrefab> CreateItems(Dictionary<int, string[]> dict)
         {
-            List<Item> itemPrefabs = new List<Item>();
+            List<ItemPrefab> itemPrefabs = new List<ItemPrefab>();
             for (int i = 0; i < dict.Count; i++)
             {
-                Item Prefab = new Item(GOmanager);
+                ItemPrefab Prefab = new ItemPrefab();
+                Prefab.Components = new List<Component>();
                 foreach (string s in dict[i])
                 {
                     string[] tokens = s.Split(':');
@@ -40,16 +55,16 @@ namespace TreDe
                     if (tokens[0].Trim() == "COLOR")
                     {
                         string[] values = tokens[1].Split(',');
-                        Prefab.color = new Color(
+                        Prefab.Color = new int[3] {
                             Convert.ToInt32(values[0].Trim()),
                             Convert.ToInt32(values[1].Trim()),
                             Convert.ToInt32(values[2].Trim())
-                            );
+                        };
                     }
 
                     if (tokens[0].Trim() == "WEAPON")
                     {
-                        WeaponComponent WC = new WeaponComponent(TypeOfComponent.WEAPON, Prefab);
+                        WeaponComponent WC = new WeaponComponent(TypeOfComponent.WEAPON, null);
                         foreach (string weaponString in dict[i])
                         {
                             string[] weaponTokens = weaponString.Split(':');
@@ -68,14 +83,13 @@ namespace TreDe
                     }
                     if (tokens[0].Trim() == "CONTAINER")
                     {
-                        ContainerComponent CC = new ContainerComponent(TypeOfComponent.CONTAINER, Prefab);
+                        ContainerComponent CC = new ContainerComponent(TypeOfComponent.CONTAINER, null);
                         foreach (string containerString in dict[i])
                         {
                             string[] containerTokens = containerString.Split(':');
                             if (containerTokens[0].Trim() == "CAPACITY")
                             {
                                 CC.MaxCapacity = Convert.ToInt32(containerTokens[1]);
-                              
                             }
                         }
 

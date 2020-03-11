@@ -1,8 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using System;
 
 namespace TreDe
 {
+    [Serializable]
     public class Player:Actor
     {
         
@@ -10,7 +10,7 @@ namespace TreDe
                                               : base(GOmanager, position)
         {
             Name = "Hiero Protagonist";
-            color = Color.Yellow;
+            color = new int[3] { 240, 50, 100 };
             Glyph = 2;
         }
 

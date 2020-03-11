@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.IO;
 
 namespace TreDe
 {
@@ -22,6 +23,7 @@ namespace TreDe
             renderer = new SingleScreenRender(Manager);
             InteractionChoices = new Dictionary<int, Choice>();
             InitializeChoices();
+            if (File.Exists("save")) { saved_game_exists = true; }
         }
 
         private void InitializeChoices()
@@ -52,9 +54,22 @@ namespace TreDe
             Choice choice = InteractionChoices[index];
             switch (choice.keyword)
             {
-                case "new":Manager.ClearStack(); Manager.Push(new MainMenuState()); Manager.Push(new PlayState()); break;
+                case "new":
+                    {
+                        Manager.ClearStack();
+                        Manager.Push(new MainMenuState());
+                        PlayState playState = new PlayState();
+                        Manager.Push(playState);
+                        playState.GenerateNew();
+                        break;
+                    }
+
                 case "quit": Manager.ClearStack(); break;
+
                 case "save": Manager.Pop(); Manager.Push(new SaveState((PlayState)Manager.Peek())); break;
+
+                case "load":Manager.ClearStack(); Manager.Push(new LoadState());break;
+
                 case "continue":Manager.Pop(); break;
             }
         }

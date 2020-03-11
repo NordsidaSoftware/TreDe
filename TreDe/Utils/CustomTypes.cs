@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace TreDe
 {
-   
-        public struct FPoint
+
+    [Serializable]
+    public struct FPoint
         {
             public float X;
             public float Y;
@@ -18,12 +19,12 @@ namespace TreDe
                 this.Y = Y;
             }
         }
-
+    [Serializable]
     public struct Point3
     {
-        public int X;
-        public int Y;
-        public int Z;
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Z { get; set; }
 
         public Point3 (int X, int Y, int Z)
         {

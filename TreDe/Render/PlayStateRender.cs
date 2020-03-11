@@ -181,7 +181,8 @@ namespace TreDe
                                 spriteBatch.Draw(texture, rectangle,
                                              new Rectangle(strX_offset, strY_offset, TextureTileSize, TextureTileSize),
 
-                                             new Color(item.color, (1.0f - z / 8.0f)));
+                                             new Color(item.color[0], item.color[1], item.color[2]));
+                                            // new Color(item.color, (1.0f - z / 8.0f)));
                             
                         }
                         
@@ -193,8 +194,8 @@ namespace TreDe
 
                             spriteBatch.Draw(texture, rectangle,
                                          new Rectangle(strX_offset, strY_offset, TextureTileSize, TextureTileSize),
-
-                                         new Color(GO.color, (1.0f - z / 8.0f)));
+                                     new Color(GO.color[0], GO.color[1], GO.color[2]));
+                                       //  new Color(GO.color[0],GO.color[1], GO.color[2], (1.0f - z / 8.0f)));
                         }
                         
                     }

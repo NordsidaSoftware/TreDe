@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,14 +10,15 @@ namespace TreDe
 /// Fields : position, glyph, color and name
 /// Contains a component system
 /// </summary>
+[Serializable]
     public class GameObject
     {
         public GameObjectManager GOmanager;
-        public Point3 position;
-        public int Glyph;
-        public Color color;
-        public string Name;
-        public List<Component> Components;
+        public Point3 position { get; set; }
+        public int Glyph { get; set; }
+        public int[] color { get; set; }
+        public string Name { get; set; }
+        public List<Component> Components { get; set; }
 
         public GameObject(GameObjectManager GOmanager)
         {
@@ -32,7 +34,6 @@ namespace TreDe
             {
                 if (args.requires == c.typeOfComponent) { c.Execute(sender, args); }
             }
-
         }
 
         public virtual Component GetComponent(TypeOfComponent type)
@@ -49,6 +50,26 @@ namespace TreDe
         public override string ToString()
         {
             return Name;
+        }
+
+        public virtual string ToFile()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(Name);
+            sb.Append(":");
+            sb.Append(Glyph.ToString());
+            sb.Append(":");
+            sb.Append(color);
+            sb.Append(":");
+            sb.Append(position.ToString());
+            sb.Append(":");
+            foreach(Component c in Components)
+            {
+                sb.Append(c.ToFile());
+                sb.Append(":");
+            }
+
+            return sb.ToString();
         }
     }
 }

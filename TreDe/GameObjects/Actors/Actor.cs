@@ -7,14 +7,16 @@ namespace TreDe
     /// <summary>
     /// Actor inherits from GameObject. Fields : Inventory.
     /// </summary>
+    [Serializable]
     public class Actor : GameObject
     {
-        public List<Item> Inventory;
+        public List<Item> Inventory { get; set; }
+
         public Actor(GameObjectManager GOmanager, Point3 position) : base(GOmanager)
         {
             this.position = position;
             Glyph = 1;
-            color = Color.LimeGreen;
+            color = new int[3] { 100, 100, 100 };
             Name = "Name not initialized";
             Inventory = new List<Item>();
         }
@@ -38,9 +40,11 @@ namespace TreDe
                 {   
                     // 5. Not occupied, move into tile
                     GOmanager.ActorMove(position, dx, dy, dz);
-                    position.X += dx;
-                    position.Y += dy;
-                    position.Z += dz;
+                    Point3 newPoint = position;
+                    newPoint.X += dx;
+                    newPoint.Y += dy;
+                    newPoint.Z += dz;
+                    position = newPoint;
 
                     // 6. Interact with tile just exited : (close doors )
                     GOmanager.playState.Interact(position.X, position.Y, position.Z);

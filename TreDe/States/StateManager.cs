@@ -29,6 +29,7 @@ namespace TreDe
     {
         private Stack<State> StateStack;
 
+
         private bool IsNotEmpty { get { return StateStack.Count > 0; } }
         public bool GameInProgress { get { return StateStack.Count > 1; } } // Stack[0] = MainMenu. 
         

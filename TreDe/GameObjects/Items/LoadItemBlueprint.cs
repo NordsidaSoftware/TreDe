@@ -8,16 +8,22 @@ namespace TreDe
     
     public static class LoadItemBlueprint
     {
-       public static Item LoadItem(string search)
+       public static Item LoadItem(string search, GameObjectManager GOmanager)
         {
-            foreach (Item i in ReadFromRaw.itemList)
+            foreach (ItemPrefab i in ReadFromRaw.itemList)
             {
                 if (i.Name == search)
                 {
-                    Item item = new Item(i.GOmanager);
-                    int id = item.ID;
-                    item = i;
-                    item.ID = id;
+                    Item item = new Item(GOmanager);
+                    item.Name = i.Name;
+                    item.Glyph = i.Glyph;
+                    item.color = i.Color;
+                    foreach (Component c in i.Components)
+                    {
+                        c.owner = item;
+                        item.Components.Add(c);
+                    }
+                    item.ID = Item.GetID();
                     return item;
                 }
             }

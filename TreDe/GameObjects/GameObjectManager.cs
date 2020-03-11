@@ -3,11 +3,16 @@ using System.Collections.Generic;
 
 namespace TreDe
 {
+    [Serializable]
     public class GameObjectManager
     {
+        [NonSerialized]
         public PlayState playState;
+        [NonSerialized]
         public Player player;
+        [NonSerialized]
         public List<Actor> ActorsList;
+        [NonSerialized]
         public GameObject[,,] ActorsGrid;
         /*
          * FOrt før jeg glemmer det. Hver person kan ha en ID, siden det bare er å lagre 
@@ -18,9 +23,11 @@ namespace TreDe
          * 
          * 
          * */
-
+        [NonSerialized]
         public int[,,] ItemGrid;
+        [NonSerialized]
         public Dictionary<int, Item> ItemDictionary;
+        [NonSerialized]
         readonly Random rnd;
 
 
@@ -28,15 +35,15 @@ namespace TreDe
         {
             for (int a = 0; a < 100; a++)
             {
-                Item i = LoadItemBlueprint.LoadItem("oks");
+                Item i = LoadItemBlueprint.LoadItem("oks", this);
                 i.position = new Point3(rnd.Next(0, 100), rnd.Next(0, 100), 0);
                 DropItemOnTerrain(i);
 
-                Item j = LoadItemBlueprint.LoadItem("En sekk av strie");
+                Item j = LoadItemBlueprint.LoadItem("En sekk av strie", this);
                 j.position = new Point3(rnd.Next(0, 100), rnd.Next(0, 100), 0);
                 DropItemOnTerrain(j);
 
-                Item k = LoadItemBlueprint.LoadItem("En rar greie");
+                Item k = LoadItemBlueprint.LoadItem("En rar greie", this);
                 k.position = new Point3(rnd.Next(0, 100), rnd.Next(0, 100), 0);
                 DropItemOnTerrain(k);
             }
@@ -54,8 +61,7 @@ namespace TreDe
 
             ActorsGrid = new GameObject[s.WorldWidth, s.WorldHeight, s.WorldDepth];
             ActorsList = new List<Actor>();
-            player = new Player(this, new Point3(28, 9, 0));
-            NewActor(player);
+           
         }
 
         public Actor CreateRandomNPC(int x, int y, int z)
@@ -64,6 +70,14 @@ namespace TreDe
             actor = LoadActorBlueprint.Load("NPC", actor);
             NewActor(actor);
             return actor;
+        }
+
+        public Player CreateNewPlayer(int x, int y, int z)
+        {
+            Player player = new Player(this, new Point3(x, y, z));
+            this.player = player;
+            NewActor(player);
+            return player;
         }
 
         public void DropItemOnTerrain(Item i) // ---> Drop 'i' on grid.
@@ -115,6 +129,11 @@ namespace TreDe
             if (ItemGrid[x, y, z] != 0) { return true; }
             else { return false; }
         }
+        /// <summary>
+        ///  Method to check the itemGrid for an item,
+        /// </summary>
+       
+        /// <returns>Item or pile object</returns>
         internal Item GetItemAt(int x, int y, int z)
         {
             int ID = ItemGrid[x, y, z];
@@ -122,9 +141,10 @@ namespace TreDe
             return ItemDictionary[ID];
         }
 
-        private void NewActor(Actor actor)
+        public void NewActor(Actor actor)
         {
-            ActorsList.Add(actor);
+            if (actor is Player p) { ActorsList.Insert(0, p); }
+            else { ActorsList.Add(actor); }
             ActorsGrid[actor.position.X, actor.position.Y, actor.position.Z] = actor;
         }
 
