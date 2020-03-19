@@ -35,7 +35,7 @@ namespace TreDe
         // %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-        internal void LoadFromSave(List<Actor> actors, Player player, Dictionary<int, Item> items, byte[,,] terrain)
+        internal void LoadFromSave(Dictionary<int, Actor> actors, Player player, Dictionary<int, Item> items, byte[,,] terrain)
         {
             GOmanager = new GameObjectManager(this);
             Terrain = terrain;
@@ -49,10 +49,10 @@ namespace TreDe
 
             // set correct gomanager to all restored actors, and insert into
             // actorslist:
-            foreach (Actor a in actors)
+            foreach (KeyValuePair<int, Actor> kvp in actors)
             {
-                a.GOmanager = GOmanager;
-                GOmanager.NewActor(a);
+                kvp.Value.GOmanager = GOmanager;
+                GOmanager.NewActor(kvp.Value);
             }
            
 
@@ -107,8 +107,12 @@ namespace TreDe
         // ReadFromRaw :
         ReadFromRaw.Read();
 
-        // new instance of the physicsEngine:
-        PhysE = new PhysEngine(this);
+            // Read into the static dictionary the different bodyplans
+       BodyPlans.InitializeBodyPlans();
+
+
+            // new instance of the physicsEngine:
+            PhysE = new PhysEngine(this);
     }
 
 

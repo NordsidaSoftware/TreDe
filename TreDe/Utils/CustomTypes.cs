@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TreDe
 {
-
+    
     [Serializable]
     public struct FPoint
         {
@@ -19,12 +19,22 @@ namespace TreDe
                 this.Y = Y;
             }
         }
+
+    public enum  Directions { FORWARD, BACKWARD, LEFT, RIGHT, UP, DOWN }
     [Serializable]
     public struct Point3
     {
         public int X { get; set; }
         public int Y { get; set; }
         public int Z { get; set; }
+        
+        public static Point3 Forward { get { return new Point3(0, 0, 1); } }
+        public static Point3 Backward { get { return new Point3(0, 0, -1); } }
+        public static Point3 Left { get { return new Point3(-1, 0, 0); } }
+        public static Point3 Right { get { return new Point3(1, 0, 0); } }
+        public static Point3 Up { get { return new Point3(0, 1, 0); } }
+        public static Point3 Down { get { return new Point3(0, -1, 0); } }
+
 
         public Point3 (int X, int Y, int Z)
         {

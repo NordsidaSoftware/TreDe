@@ -12,6 +12,9 @@ namespace TreDe
             Name = "Hiero Protagonist";
             color = new int[3] { 240, 50, 100 };
             Glyph = 2;
+
+            ID = 1;   // Special assignment for the player
+            Mass = 70;
         }
 
     }

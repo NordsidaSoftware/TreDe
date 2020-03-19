@@ -11,6 +11,8 @@ namespace TreDe
     }
 
 
+
+
     // A struct that will store the data for the item read from the raw.
     // all components will have owner set to null
     public struct ItemPrefab
@@ -18,6 +20,7 @@ namespace TreDe
         public string Name;
         public int Glyph;
         public int[] Color;
+        public int Mass;        // Later : a function of the materials used.
 
         public List<Component> Components;
     }
@@ -28,9 +31,7 @@ namespace TreDe
         public static List<ItemPrefab> itemList = new List<ItemPrefab>();
         public static void Read()
         {
-            //string filename = @"C: \Users\kroll\source\repos\TreDe\TreDe\Items.txt";
             string filename = @"C:\Users\kroll\source\repos\TreDe\TreDe\Items.txt";
-
 
             string[] rawsource = File.ReadAllLines(filename);
             string[] scannedsource = Scan(rawsource);
@@ -61,6 +62,8 @@ namespace TreDe
                             Convert.ToInt32(values[2].Trim())
                         };
                     }
+
+                    if (tokens[0].Trim() == "MASS") { Prefab.Mass = Convert.ToInt32(tokens[1].Trim()); }
 
                     if (tokens[0].Trim() == "WEAPON")
                     {

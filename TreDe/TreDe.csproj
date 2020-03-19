@@ -42,7 +42,13 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Components\Attack.cs" />
+    <Compile Include="Components\BodyPlans.cs" />
+    <Compile Include="Components\ContainerComponent.cs" />
+    <Compile Include="Components\WeaponComponent.cs" />
     <Compile Include="GameObjects\Actors\Actor.cs" />
+    <Compile Include="Components\BodyComponent.cs" />
+    <Compile Include="Components\BodyPart.cs" />
     <Compile Include="GameObjects\Actors\LoadActorBlueprint.cs" />
     <Compile Include="GameObjects\GameObject.cs" />
     <Compile Include="Components\Component.cs" />

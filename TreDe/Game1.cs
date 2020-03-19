@@ -25,7 +25,7 @@ namespace TreDe
         protected override void Initialize()
         {
             Randomizer.Initialize(1976);
-
+            
             fps = new FPS(this);
 
             settings = new Settings();
@@ -38,7 +38,6 @@ namespace TreDe
             stateManager = new StateManager(this);
             Components.Add(stateManager);
 
-            // PlayState ps = new PlayState();
             MainMenuState sss = new MainMenuState();
             stateManager.Push(sss);
 

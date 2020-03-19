@@ -18,6 +18,7 @@ namespace TreDe
         public int Glyph { get; set; }
         public int[] color { get; set; }
         public string Name { get; set; }
+        public int Mass { get; set; }
         public List<Component> Components { get; set; }
 
         public GameObject(GameObjectManager GOmanager)
@@ -50,26 +51,6 @@ namespace TreDe
         public override string ToString()
         {
             return Name;
-        }
-
-        public virtual string ToFile()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(Name);
-            sb.Append(":");
-            sb.Append(Glyph.ToString());
-            sb.Append(":");
-            sb.Append(color);
-            sb.Append(":");
-            sb.Append(position.ToString());
-            sb.Append(":");
-            foreach(Component c in Components)
-            {
-                sb.Append(c.ToFile());
-                sb.Append(":");
-            }
-
-            return sb.ToString();
         }
     }
 }

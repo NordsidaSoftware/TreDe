@@ -11,16 +11,14 @@ namespace TreDe
         [NonSerialized]
         public Player player;
         [NonSerialized]
-        public List<Actor> ActorsList;
+        public Dictionary<int, Actor> ActorsDictionary;
         [NonSerialized]
-        public GameObject[,,] ActorsGrid;
+        public int[,,] ActorsGrid;
         /*
          * FOrt før jeg glemmer det. Hver person kan ha en ID, siden det bare er å lagre 
          * en int. PErsoner som ikke er fokusert lagres kun som en abstraksjon
          * samme for utstyr tenker jeg. Kan bare være et item pr. tile, men flere
          * items sammen kan være en pile
-         * 
-         * 
          * 
          * */
         [NonSerialized]
@@ -57,11 +55,8 @@ namespace TreDe
             ItemGrid = new int[s.WorldWidth, s.WorldHeight, s.WorldDepth];
             ItemDictionary = new Dictionary<int, Item>();
 
-
-
-            ActorsGrid = new GameObject[s.WorldWidth, s.WorldHeight, s.WorldDepth];
-            ActorsList = new List<Actor>();
-           
+            ActorsGrid = new int[s.WorldWidth, s.WorldHeight, s.WorldDepth];
+            ActorsDictionary = new Dictionary<int, Actor>();
         }
 
         public Actor CreateRandomNPC(int x, int y, int z)
@@ -119,10 +114,6 @@ namespace TreDe
             ItemDictionary.Remove(ID);
         }
 
-        internal bool IsActorsGridOccupied(int x, int y, int z)
-        {
-            return (ActorsGrid[x, y, z] != null);
-        }
 
         internal bool IsItemAt(int x, int y, int z)
         {
@@ -143,22 +134,27 @@ namespace TreDe
 
         public void NewActor(Actor actor)
         {
-            if (actor is Player p) { ActorsList.Insert(0, p); }
-            else { ActorsList.Add(actor); }
-            ActorsGrid[actor.position.X, actor.position.Y, actor.position.Z] = actor;
+            ActorsDictionary[actor.ID] = actor; 
+            ActorsGrid[actor.position.X, actor.position.Y, actor.position.Z] = actor.ID;
+        }
+        internal bool IsActorsGridOccupied(int x, int y, int z)
+        {
+            return (ActorsGrid[x, y, z] != 0);
         }
 
         internal void ActorMove(Point3 position, int dx, int dy, int dz)
         {
             ActorsGrid[position.X + dx, position.Y + dy, position.Z + dz] =
             ActorsGrid[position.X, position.Y, position.Z];
-            ActorsGrid[position.X, position.Y, position.Z] = null;
+            ActorsGrid[position.X, position.Y, position.Z] = 0;
 
         }
 
-        public GameObject GetActorAt(int x, int y, int z)
+        public Actor GetActorAt(int x, int y, int z)
         {
-            return ActorsGrid[x, y, z];
+            int ID = ActorsGrid[x, y, z];
+            if (ID == 0) { return null; }
+            else return ActorsDictionary[ID];
         }
 
     }

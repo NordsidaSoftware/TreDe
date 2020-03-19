@@ -15,7 +15,7 @@ namespace TreDe
         InputHandler input;
 
         byte[,,] terrain = new byte[800, 400, 8];
-        List<Actor> Actors = new List<Actor>();
+        Dictionary<int, Actor> Actors = new Dictionary<int, Actor>();
         Player Player;
         Dictionary<int, Item> Items = new Dictionary<int, Item>();
 
@@ -62,7 +62,7 @@ namespace TreDe
 
             try
             {
-                Actors = (List<Actor>)bf.Deserialize(fs);
+                Actors = (Dictionary<int, Actor>)bf.Deserialize(fs);
                 Player = (Player)bf.Deserialize(ps);
 
             }

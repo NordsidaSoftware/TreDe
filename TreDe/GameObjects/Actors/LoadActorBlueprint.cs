@@ -23,6 +23,13 @@ namespace TreDe
         public static Actor Load(string type, Actor actor)
         {
             actor.Name = RandomNames[rnd.Next(0, RandomNames.Count - 1)];
+            actor.Mass = 70 + rnd.Next(-30, 30);
+
+            BodyComponent bc = new BodyComponent(TypeOfComponent.BODY, actor);
+            bc.BodyPlanID = 0;  // HUMANOID BODYPLAN = 0
+            actor.Components.Add(bc);
+
+
             return actor;
         }
     }

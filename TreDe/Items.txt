@@ -2,6 +2,7 @@
 
 # weapons are defined by the tag WEAPON. the different attacks are defined by the area of potential penetration
 # in mm
+# the other keywords are rather self expl. MASS is in g
 
 [
 WEAPON 
@@ -10,6 +11,7 @@ BLUNT : 50, 10
 NAME : oks
 GLYPH : 34
 COLOR : 100, 100, 50
+MASS : 2000
 ]
 
 # container items are defined by the tag CONTAINER and the capacity in litres
@@ -19,6 +21,7 @@ CAPACITY : 60
 NAME : En sekk av strie
 GLYPH : 69
 COLOR : 10, 200, 50
+MASS : 500
 ]
 
 # an test item with rather conflicting tags, both a weapon and an container...
@@ -30,6 +33,7 @@ EDGE : 5,5
 NAME : En rar greie
 GLYPH : 10
 COLOR : 100, 10, 200
+MASS : 3000
 ]
 
 

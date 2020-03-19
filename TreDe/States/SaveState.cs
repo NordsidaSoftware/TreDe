@@ -72,12 +72,12 @@ namespace TreDe
 
             // Remove player form ActorsList. Player is saved as a separate
             // file.
-            playState.GOmanager.ActorsList.RemoveAt(0);
+          
             BinaryFormatter bf = new BinaryFormatter();
             FileStream fs = new FileStream("Actors", FileMode.Create, FileAccess.Write);
             FileStream ps = new FileStream("Player", FileMode.Create, FileAccess.Write);
 
-            bf.Serialize(fs, playState.GOmanager.ActorsList);
+            bf.Serialize(fs, playState.GOmanager.ActorsDictionary);
             bf.Serialize(ps, playState.GOmanager.player);
 
             fs.Close();
